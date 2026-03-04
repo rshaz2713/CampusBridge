@@ -10,5 +10,19 @@
 **UNLIKE** the Ellucian CentralPipeline,<br>
 **OUR PRODUCT** prioritizes usability, minimal navigation friction, and system reliability.<br>
 
-## Quickstart
+## Project Quickstart
 TODO
+
+## Git Practices
+
+* No direct commits to `main`
+* Verify you have access to `.gitignore`
+* Create branches as `type/short-description`. Types:
+    * `feat/` - New user-facing capability
+    * `fix/` - Bug fix
+    * `chore/` - Setup, tooling, dependencies, refactors, formatting
+    * `docs/` - Documentation only
+* Open pull requests when completed with branch work
+* We will mostly use squash and merge
+* Verify main still works
+* Never commit `venv/`, `.env`, or `db.sqlite3`
