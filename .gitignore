@@ -1,0 +1,12 @@
+# Python, Django, and env
+venv/
+__pycache__/
+*.pyc
+.env
+
+# OS
+.DS_Store
+.vscode/
+
+# Django lcoal DB
+db.sqlite3
