@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Home | CampusBridge{% endblock %}
+
+{% block content %}
+<h1>Welcome to CampusBridge</h1>
+<p>This portal centralizes academic and campus resources... better than CentralPipeline</p>
+<p>Created by Team Robotastic: Rumman Shahzad, Raghubir Bhandari, Seth Wilfinger, Devak Chhita</p>
+
+<p><a href="{% url 'login' %}">Login</a></p>
+<p><a href="{% url 'dashboard_home' %}">Go to Dashboard</a></p>
+
+{% endblock %}
