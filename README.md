@@ -1,6 +1,6 @@
 # CampusBridge Quick Start and Developer Guide
 
-**CS 530 Spring 2026, Team Robotastic**
+**Team Robotastic — CS 530 Spring 2026**
 
 **FOR** institutions of higher education<br>
 **WHERE** professors and students need a centralized gateway for campus essentials,<br>
@@ -34,6 +34,24 @@ python manage.py runserver
 
 *Once project is setup, you can run the project by sourcing the venv and using* `python manage.py runserver`.
 
+## Project Structure
+
+Directory Overview:
+* `config/` - Global Django configuration
+* `core/` - Django app for landing page and general site pages that are shared
+* `dashboard/` - Django app for authenticated dashboard views
+* `templates/` - HTML templates rendered by views
+
+Authentication:
+* CampusBridge uses Django's built-in authentication framework (django.contrib.auth). This proivdes login, logout, session management, and password validation for us.
+* Django provides URL routes `/accounts/login/` and `/accounts/logout/` for login and logout.
+* Views requiring login are protected by Django's `@login_required` decorator, automatically redirecting the user to login.
+
+## Superusers
+
+For development purposes, you should create a superuser to access Django admin via `http://127.0.0.1:8000/admin` and to test login/logout features.
+
+In your venv, run `python manage.py createsuperuser` and set a dummy name, email, and password. This will be stored in your local database and will not be committed to GitHub.
 
 ## Updating Database Models
 If you are doing database work and change any models, you MUST run:
@@ -42,8 +60,9 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-Any migration files that are created MUST be committed to GitHub so all team members can recreate the same database on their local machine. Do not commit db.sqlite3.
+Any migration files that are created MUST be committed to GitHub so all team members can recreate the same database on their local machine.
 
+**Do not commit db.sqlite3 to GitHub.**
 
 ## Git Practices
 
