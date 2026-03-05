@@ -88,11 +88,12 @@ Any migration files that are created MUST be committed to GitHub so all team mem
 
 * No direct commits to `main`
 * Verify you have access to `.gitignore`
-* Create branches as `type/short-description`. Types:
+* Create branches with the format `type/short-description`. Types of branches include:
     * `feat/` - New user-facing capability
     * `fix/` - Bug fix
     * `chore/` - Setup, tooling, dependencies, refactors, formatting
     * `docs/` - Documentation only
+    * Example branch names: `feat/grades-view`, `chore/django-setup`, `docs/auth-info`
 * Open pull requests when completed with branch work
 * We will mostly use squash and merge
 * Verify main still works
