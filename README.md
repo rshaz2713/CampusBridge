@@ -47,6 +47,26 @@ Authentication:
 * Django provides URL routes `/accounts/login/` and `/accounts/logout/` for login and logout.
 * Views requiring login are protected by Django's `@login_required` decorator, automatically redirecting the user to login.
 
+## Adding a Page
+
+**FYI, you should not have to edit config files or settings. These steps should be sufficient.**
+
+1. Create an HTML template inside `templates`; make sure to put in appropriate subdirectory. Use Django syntax to construct your HTML template. Example:
+```
+{% extends "base.html" %}
+{% block title %}Title{% endblock %}
+{% block content %}
+<h1>Heading</h1>
+<p>Paragraph</p>
+{% endblock %}
+```
+
+2. Add the view in a `views.py` file. If it's a general app view, add in `core/views.py`; if it's a dashboard view, add in `dashboard/views.py`. This view function is what will render the template. If it's authentication-protected, add decorator `@login_required`.
+
+3. Add the route in `urls.py` for the corresponding application. (You should not have to touch `config/urls.py`; that is for global routing.)
+
+4. Test by running the project as mentioned above.
+
 ## Superusers
 
 For development purposes, you should create a superuser to access Django admin via `http://127.0.0.1:8000/admin` and to test login/logout features.
@@ -54,6 +74,7 @@ For development purposes, you should create a superuser to access Django admin v
 In your venv, run `python manage.py createsuperuser` and set a dummy name, email, and password. This will be stored in your local database and will not be committed to GitHub.
 
 ## Updating Database Models
+
 If you are doing database work and change any models, you MUST run:
 ```
 python manage.py makemigrations
