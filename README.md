@@ -27,8 +27,7 @@ python manage.py runserver
 ```
 *NOTE: If you are using Windows Terminal, to source the venv run* `.\venv\Scripts\Activate.ps1`.
 
-4. Open `http://127.0.0.1:8000` and you should see a Django success screen
-
+4. Open `http://127.0.0.1:8000` and you should see the landing page for CampusBridge
 5. To stop the Django server, input Ctrl+C
 6. To deactivate venv, run `deactivate`
 
