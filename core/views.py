@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+# Landing page view when user loads CampusBridge.
 def home(request):
     return render(request, "core/home.html")
     

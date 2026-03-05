@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# Root URL configuration. Routes traffic to appropriate Django apps.
+# You can check specific URLs of apps core and dashboard.
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),
