@@ -31,7 +31,7 @@ python manage.py runserver
 5. To stop the Django server, input Ctrl+C
 6. To deactivate venv, run `deactivate`
 
-*Once project is setup, you can run the project by sourcing the venv and using* `python manage.py runserver`.
+*Note that once you have completed project setup, you can run the project anytime by sourcing the venv and using* `python manage.py runserver`.
 
 ## Project Structure
 
