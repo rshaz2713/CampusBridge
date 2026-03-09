@@ -3,17 +3,57 @@
 {% block title %}Login | CampusBridge{% endblock %}
 
 {% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card login-card">
+            <div class="card-body">
+                <h1 class="display-3 text-center login-title">Login</h1>
 
-<h1>CampusBridge Login</h1>
+                {% if form.errors %}
+                    <p class="text-danger text-center">Invalid username or password.</p>
+                {% endif %}
 
-{% if form.errors %}
-<p style="color:red;">Invalid username or password.</p>
-{% endif %}
+                <form action="{% url 'login' %}" method="post" novalidate>
+                    {% csrf_token %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+                    <div class="mb-4">
+                        <label for="{{ form.username.id_for_label }}" class="form-label custom-label">Username*</label>
+                        <input
+                            type="text"
+                            name="{{ form.username.html_name }}"
+                            id="{{ form.username.id_for_label }}"
+                            class="form-control custom-input"
+                            value="{{ form.username.value|default:'' }}"
+                            required
+                        >
+                    </div>
 
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label custom-label">Password*</label>
+                        <input
+                            type="password"
+                            name="{{ form.password.html_name }}"
+                            id="{{ form.password.id_for_label }}"
+                            class="form-control custom-input"
+                            required
+                        >
+                    </div>
+
+                    <div class="d-grid my-4">
+                        <button class="btn btn-outline-primary btn-lg login-btn" type="submit">
+                            <i class="fas fa-right-to-bracket"></i> Login
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="small fw-bold my-3 pt-1 mb-0">
+                            Don't have an account?
+                            <a href="{% url 'register' %}" class="link-danger">Register</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
