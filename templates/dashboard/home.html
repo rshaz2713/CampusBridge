@@ -3,10 +3,15 @@
 {% block title %}{{ user.username }}'s Dashboard | CampusBridge{% endblock %}
 
 {% block content %}
-
-<h1>Dashboard</h1>
-
-<p>Welcome {{ user.username }}</p>
-<p>This is your CampusBridge dashboard.</p>
-
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-3">Dashboard</h1>
+                <p class="lead">Welcome, {{ user.username }}</p>
+                <p>This is your CampusBridge dashboard.</p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

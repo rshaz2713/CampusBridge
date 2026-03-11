@@ -1,13 +1,23 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Home | CampusBridge{% endblock %}
 
 {% block content %}
-<h1>Welcome to CampusBridge</h1>
-<p>This portal centralizes academic and campus resources... better than CentralPipeline</p>
-<p>Created by Team Robotastic: Rumman Shahzad, Raghubir Bhandari, Seth Wilfinger, Devak Chhita</p>
-
-<p><a href="{% url 'login' %}">Login</a></p>
-<p><a href="{% url 'dashboard_home' %}">Go to Dashboard</a></p>
-
+<section class="container p-5 shadow my-5 bg-body rounded">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            {% if user.is_authenticated %}
+                <h1 class="display-3 text-sm-start text-center">Hello, {{ user.username }}!</h1>
+                <p class="lead">Welcome back to CampusBridge.</p>
+                <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg mt-3">Go to Dashboard</a>
+            {% else %}
+                <h1 class="display-3 text-sm-start text-center">Welcome to CampusBridge</h1>
+                <p class="lead">This portal centralizes academic and campus resources in one place.</p>
+                <p>Created by Team Robotastic: Rumman Shahzad, Raghubir Bhandari, Seth Wilfinger, Devak Chhita</p>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-3">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
 {% endblock %}
