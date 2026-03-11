@@ -27,12 +27,11 @@ python manage.py runserver
 ```
 *NOTE: If you are using Windows Terminal, to source the venv run* `.\venv\Scripts\Activate.ps1`.
 
-4. Open `http://127.0.0.1:8000` and you should see a Django success screen
-
+4. Open `http://127.0.0.1:8000` and you should see the landing page for CampusBridge
 5. To stop the Django server, input Ctrl+C
 6. To deactivate venv, run `deactivate`
 
-*Once project is setup, you can run the project by sourcing the venv and using* `python manage.py runserver`.
+*Note that once you have completed project setup, you can run the project anytime by sourcing the venv and using* `python manage.py runserver`.
 
 ## Project Structure
 
@@ -89,11 +88,12 @@ Any migration files that are created MUST be committed to GitHub so all team mem
 
 * No direct commits to `main`
 * Verify you have access to `.gitignore`
-* Create branches as `type/short-description`. Types:
+* Create branches with the format `type/short-description`. Types of branches include:
     * `feat/` - New user-facing capability
     * `fix/` - Bug fix
     * `chore/` - Setup, tooling, dependencies, refactors, formatting
     * `docs/` - Documentation only
+    * Example branch names: `feat/grades-view`, `chore/django-setup`, `docs/auth-info`
 * Open pull requests when completed with branch work
 * We will mostly use squash and merge
 * Verify main still works
