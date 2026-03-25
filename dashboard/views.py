@@ -5,5 +5,13 @@ from django.contrib.auth.decorators import login_required
 # Django automatially redirecst them to /accounts/login URL.
 @login_required
 def dashboard_home(request):
-    return render(request, "dashboard/home.html")
+
+    # Testing for role-based rendering, hard-coded for now.
+    # This placeholder is used until perssitent role data is implemetned elsewhere. 
+    role = request.session.get("role", "student")
+    context = {
+        "role": role,
+    }
+
+    return render(request, "dashboard/home.html", context)
     

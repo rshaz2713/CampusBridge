@@ -7,9 +7,29 @@
     <div class="col-lg-10">
         <div class="card shadow p-4">
             <div class="card-body">
-                <h1 class="mb-3">Dashboard</h1>
-                <p class="lead">Welcome, {{ user.username }}</p>
-                <p>This is your CampusBridge dashboard.</p>
+                <h1 class="mb-3">{{ user.username }}'s Dashboard</h1>
+                {% if role == "student" %}
+                    <hr>
+                    <p class="fs-5 fw-bold">Student Tools</p>
+                    <ul>
+                        <li>Degree Audit</li>
+                        <li>Financial Documents</li>
+                        <li>Wellness Resources</li>
+                        <li>Core-CT Timesheet</li>
+                    </ul>
+                {% elif role == "professor" %}
+                    <hr>
+                    <p class="fs-5 fw-bold">Professor Tools</p>
+                    <ul>
+                        <li>Student Search</li>
+                        <li>Financial Documents</li>
+                        <li>Wellness Resources</li>
+                        <li>Core-CT Timesheet</li>
+                    </ul>
+                {% else %}
+                    <hr>
+                    <p>No user role has been assigned yet.</p>
+                {% endif %}
             </div>
         </div>
     </div>
