@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("timeout.js loaded");
 
+    // Retrieve session banner elements from DOM
     const banner = document.getElementById("session-banner-shell");
     if (!banner) {
         console.log("No session timeout banner found.");
@@ -9,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let remaining = parseInt(banner.dataset.secondsRemaining, 10);
     const extendUrl = banner.dataset.extendUrl;
-    const warningThreshold = 20; // Adjustable, this is in seconds
+    const warningThreshold = 10; // Adjustable, this is in seconds
 
     const titleEl = document.getElementById("session-timeout-title");
     const textEl = document.getElementById("session-timeout-text");
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("Initial remaining seconds:", remaining);
 
+    // Retrieve a cookie by name; used for getting CSRF token for POST requests
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {
@@ -34,12 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
         return cookieValue;
     }
 
+    // Time formatting for display
     function formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     }
 
+    // Banner state functions (hidden, warning, and expired session)
     function hideBannerState() {
         banner.classList.remove("is-visible", "alert-danger");
         banner.classList.add("alert-warning");
@@ -76,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         reloginBtn.classList.remove("d-none");
     }
 
+    // Decides which UI state should be shown, rendered automatically
     function updateUI() {
         console.log("updateUI remaining =", remaining);
 
@@ -90,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateUI();
 
+    // Set countdown timer
     const timer = setInterval(() => {
         if (remaining <= 0) {
             clearInterval(timer);
@@ -107,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }, 1000);
 
+    // Extend session upon request
     extendBtn.addEventListener("click", async function () {
         try {
             const csrfToken = getCookie("csrftoken");
