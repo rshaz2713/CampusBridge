@@ -57,7 +57,7 @@
         <div class="row justify-content-center mt-4">
             <div class="col-lg-10">
                 <div id="session-timeout-banner" class="alert alert-warning d-none" role="alert" data-seconds-remaining="{{ session_seconds_remaining }}" data-extend-url="{% url 'extend_session' %}" data-login-url="{% url 'login' %}?next={{ request.path }}">
-                    <div class="d-flex justify-content-around align-items center flex-wrap gap-2">
+                    <div class="d-flex justify-content-around align-items-center flex-wrap gap-2">
                         <div class="d-flex align-items-center">
                             <strong id="session-timeout-title" class="me-1"></strong>
                             <span id="session-timeout-text" class="me-1"></span>
