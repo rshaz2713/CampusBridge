@@ -1,9 +1,19 @@
-.sticky-session-wrapper {
-    position: sticky;
-    top: 80px;
-    z-index: 1020;
+.session-banner-shell {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    margin: 0;
+    display: none;
+    transition: none;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
 }
 
-#session-timeout-banner {
-    transition: none;
+.session-banner-shell.is-visible {
+    display: block;
 }

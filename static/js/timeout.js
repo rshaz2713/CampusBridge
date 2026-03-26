@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("timeout.js loaded");
 
-    // Get document elements
-    const banner = document.getElementById("session-timeout-banner");
+    const banner = document.getElementById("session-banner-shell");
     if (!banner) {
         console.log("No session timeout banner found.");
         return;
@@ -20,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("Initial remaining seconds:", remaining);
 
-    // Get CSRF cookie
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {
@@ -42,14 +40,18 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     }
 
-    // Hide banner
     function hideBannerState() {
-        banner.classList.add("d-none");
+        banner.classList.remove("is-visible", "alert-danger");
+        banner.classList.add("alert-warning");
+
+        extendBtn.classList.remove("d-none");
+        extendBtn.disabled = false;
+        reloginBtn.classList.add("d-none");
     }
 
-    // Warning for session about to expire
     function showWarningState() {
-        banner.classList.remove("d-none", "alert-danger");
+        banner.classList.add("is-visible");
+        banner.classList.remove("alert-danger");
         banner.classList.add("alert-warning");
 
         titleEl.textContent = "Warning:";
@@ -61,9 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
         reloginBtn.classList.add("d-none");
     }
 
-    // Session expired
     function showExpiredState() {
-        banner.classList.remove("d-none", "alert-warning");
+        banner.classList.add("is-visible");
+        banner.classList.remove("alert-warning");
         banner.classList.add("alert-danger");
 
         titleEl.textContent = "Your session has expired.";
@@ -74,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
         reloginBtn.classList.remove("d-none");
     }
 
-    // Render UI based on time left
     function updateUI() {
         console.log("updateUI remaining =", remaining);
 
@@ -89,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateUI();
 
-    // Timer logic for countdown
     const timer = setInterval(() => {
         if (remaining <= 0) {
             clearInterval(timer);
@@ -107,7 +107,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }, 1000);
 
-    // Resets timer via POST request to Django backedn
     extendBtn.addEventListener("click", async function () {
         try {
             const csrfToken = getCookie("csrftoken");
