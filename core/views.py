@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django import forms
-
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.conf import settings
 
 class CampusBridgeRegisterForm(UserCreationForm):
     username = forms.CharField(
@@ -28,7 +31,6 @@ class CampusBridgeRegisterForm(UserCreationForm):
 def home(request):
     return render(request, "core/home.html")
 
-
 def register_view(request):
     if request.method == "POST":
         form = CampusBridgeRegisterForm(request.POST)
@@ -41,3 +43,14 @@ def register_view(request):
 
     return render(request, "registration/register.html", {"form": form})
     
+# Refresh timeout
+@login_required
+@require_POST
+def extend_session(request):
+    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+    request.session.modified = True
+
+    return JsonResponse({
+        "ok": True,
+        "remaining_seconds": request.session.get_expiry_age(),
+    })
