@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.session_timeout_info',
             ],
         },
     },
@@ -130,3 +131,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Predictable timeout
+SESSION_COOKIE_AGE = 20 # 30 minutes
+SESSION_SAVE_EVERY_REQUEST = True
