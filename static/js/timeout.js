@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let remaining = parseInt(banner.dataset.secondsRemaining, 10);
     const extendUrl = banner.dataset.extendUrl;
-    const warningThreshold = 10; // Adjustable, this is in seconds
+    const warningThreshold = 30; // Adjustable, this is in seconds
 
     const titleEl = document.getElementById("session-timeout-title");
     const textEl = document.getElementById("session-timeout-text");
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     }
 
-    // Banner state functions (hidden, warning, and expired session)
+    // Banner state functions. Hidden state
     function hideBannerState() {
         banner.classList.remove("is-visible", "alert-danger");
         banner.classList.add("alert-warning");
@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         reloginBtn.classList.add("d-none");
     }
 
+    // Warning state
     function showWarningState() {
         banner.classList.add("is-visible");
         banner.classList.remove("alert-danger");
@@ -67,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
         reloginBtn.classList.add("d-none");
     }
 
+    // Expired state (re-login required)
     function showExpiredState() {
         banner.classList.add("is-visible");
         banner.classList.remove("alert-warning");

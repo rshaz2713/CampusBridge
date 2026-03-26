@@ -133,5 +133,5 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Predictable timeout
-SESSION_COOKIE_AGE = 20 # Adjustable, this is in seconds
+SESSION_COOKIE_AGE = 60 # Adjustable, this is in seconds
 SESSION_SAVE_EVERY_REQUEST = True
