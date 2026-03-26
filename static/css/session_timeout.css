@@ -1,0 +1,9 @@
+.sticky-session-wrapper {
+    position: sticky;
+    top: 80px;
+    z-index: 1020;
+}
+
+#session-timeout-banner {
+    transition: none;
+}
