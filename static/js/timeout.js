@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let remaining = parseInt(banner.dataset.secondsRemaining, 10);
     const extendUrl = banner.dataset.extendUrl;
-    const warningThreshold = 30; // Adjustable, this is in seconds
+    const expireUrl = banner.dataset.expireUrl;
+
 
     const titleEl = document.getElementById("session-timeout-title");
     const textEl = document.getElementById("session-timeout-text");
@@ -18,7 +19,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const extendBtn = document.getElementById("extend-session-btn");
     const reloginBtn = document.getElementById("relogin-btn");
 
+    let sessionExpiredHandled = false;
+
     console.log("Initial remaining seconds:", remaining);
+
+    // Time formatting for display
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    }
 
     // Retrieve a cookie by name; used for getting CSRF token for POST requests
     function getCookie(name) {
@@ -36,11 +46,20 @@ document.addEventListener("DOMContentLoaded", function () {
         return cookieValue;
     }
 
-    // Time formatting for display
-    function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    // Handle backend request
+    async function postSessionAction(url) {
+        const csrfToken = getCookie("csrftoken");
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            credentials: "same-origin"
+        });
+
+        return response;
     }
 
     // Banner state functions. Hidden state
@@ -95,15 +114,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Expires a session
+    async function expireSession() {
+
+        if (sessionExpiredHandled) return;
+        sessionExpiredHandled = true;
+
+        try {
+            await postSessionAction(expireUrl);
+            console.log("Session successfully expired on backend.");
+        } catch (error) {
+            console.error("Session expiration failed.");
+        }
+    }
+
     updateUI();
 
     // Set countdown timer
     const timer = setInterval(() => {
-        if (remaining <= 0) {
-            clearInterval(timer);
-            showExpiredState();
-            return;
-        }
 
         remaining -= 1;
         console.log("tick:", remaining);
@@ -111,34 +139,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (remaining <= 0) {
             clearInterval(timer);
-            showExpiredState();
+            expireSession();
         }
     }, 1000);
 
     // Extend session upon request
     extendBtn.addEventListener("click", async function () {
+
         try {
-            const csrfToken = getCookie("csrftoken");
-
-            const response = await fetch(extendUrl, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": csrfToken,
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                credentials: "same-origin"
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to extend session.");
-            }
-
+            const response = await postSessionAction(extendUrl);
             const data = await response.json();
+
             remaining = parseInt(data.remaining_seconds, 10);
-            console.log("session extended:", remaining);
+            sessionExpiredHandled = false;
+
+            console.log("Session extended:", remaining);
             updateUI();
         } catch (error) {
-            console.error("Session extension failed:", error);
+            console.error("Session extension failed.");
         }
     });
 });
