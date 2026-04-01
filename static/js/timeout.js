@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         if (isWarning) {
             titleEl.textContent = "Warning:";
-            textEl.textContent = "YourCampusBridge session will expire in";
+            textEl.textContent = "Your CampusBridge session will expire in";
             countdownEl.textContent = formatTime(remaining);
         } else { // expired
             titleEl.textContent = "Your session has expired.";
@@ -147,6 +147,12 @@ document.addEventListener("DOMContentLoaded", function () {
             updateBannerUI();
         } catch (error) {
             console.error("Session extension failed.");
+        }
+    });
+
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+            window.location.reload();
         }
     });
 });
