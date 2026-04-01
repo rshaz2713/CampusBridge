@@ -10,7 +10,7 @@
             {% if user.is_authenticated %}
                 <h1 class="display-3 text-sm-start text-center">Hello, {{ user.username }}!</h1>
                 <p class="lead text-sm-start text-center">Welcome back to CampusBridge.</p>
-                <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg mt-3 d-sm-inline d-block">Go to Dashboard</a>
+                <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg d-sm-inline-block d-block">Go to Dashboard</a>
             {% else %}
                 <h1 class="display-3 text-sm-start text-center">Welcome to CampusBridge</h1>
                 <p class="lead text-sm-start text-center">This portal centralizes academic and campus resources in one place.</p>
