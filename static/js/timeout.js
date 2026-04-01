@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const extendUrl = banner.dataset.extendUrl;
     const expireUrl = banner.dataset.expireUrl;
 
+    const warningThreshold = 30; // Adjustable, this is in seconds
 
     const titleEl = document.getElementById("session-timeout-title");
     const textEl = document.getElementById("session-timeout-text");
