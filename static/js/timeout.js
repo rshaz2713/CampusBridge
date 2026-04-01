@@ -62,55 +62,45 @@ document.addEventListener("DOMContentLoaded", function () {
         return response;
     }
 
-    // Banner state functions. Hidden state
-    function hideBannerState() {
-        banner.classList.remove("is-visible", "alert-danger");
-        banner.classList.add("alert-warning");
+    // Render banner based on the state
+    function renderBanner(state) {
 
-        extendBtn.classList.remove("d-none");
+        const isHidden = state === "hidden";
+        const isExpired = state === "expired";
+        const isWarning = state === "warning";
+
+        banner.classList.toggle("is-visible", !isHidden);
+        banner.classList.toggle("alert-warning", isWarning || isHidden);
+        banner.classList.toggle("alert-danger", isExpired);
+
+        extendBtn.classList.toggle("d-none", isExpired);
         extendBtn.disabled = false;
-        reloginBtn.classList.add("d-none");
+
+        reloginBtn.classList.toggle("d-none", !isExpired);
+
+        if (isHidden) return;
+        
+        if (isWarning) {
+            titleEl.textContent = "Warning:";
+            textEl.textContent = "YourCampusBridge session will expire in";
+            countdownEl.textContent = formatTime(remaining);
+        } else { // expired
+            titleEl.textContent = "Your session has expired.";
+            textEl.textContent = "Please log in again.";
+            countdownEl.textContent = "";
+        }
     }
 
-    // Warning state
-    function showWarningState() {
-        banner.classList.add("is-visible");
-        banner.classList.remove("alert-danger");
-        banner.classList.add("alert-warning");
-
-        titleEl.textContent = "Warning:";
-        textEl.textContent = "Your CampusBridge session will expire in";
-        countdownEl.textContent = formatTime(remaining);
-
-        extendBtn.classList.remove("d-none");
-        extendBtn.disabled = false;
-        reloginBtn.classList.add("d-none");
-    }
-
-    // Expired state (re-login required)
-    function showExpiredState() {
-        banner.classList.add("is-visible");
-        banner.classList.remove("alert-warning");
-        banner.classList.add("alert-danger");
-
-        titleEl.textContent = "Your session has expired.";
-        textEl.textContent = "Please log in again.";
-        countdownEl.textContent = "";
-
-        extendBtn.classList.add("d-none");
-        reloginBtn.classList.remove("d-none");
-    }
-
-    // Decides which UI state should be shown, rendered automatically
-    function updateUI() {
-        console.log("updateUI remaining =", remaining);
-
+    // Decides which banner state should be shown, rendered automatically
+    function updateBannerUI() {
+        console.log("updateBannerUI remaining =", remaining);
+        
         if (remaining <= 0) {
-            showExpiredState();
+            return renderBanner("expired");
         } else if (remaining <= warningThreshold) {
-            showWarningState();
+            return renderBanner("warning");
         } else {
-            hideBannerState();
+            return renderBanner("hidden");
         }
     }
 
@@ -128,14 +118,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    updateUI();
+    updateBannerUI();
 
     // Set countdown timer
     const timer = setInterval(() => {
 
         remaining -= 1;
         console.log("tick:", remaining);
-        updateUI();
+        updateBannerUI();
 
         if (remaining <= 0) {
             clearInterval(timer);
@@ -154,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sessionExpiredHandled = false;
 
             console.log("Session extended:", remaining);
-            updateUI();
+            updateBannerUI();
         } catch (error) {
             console.error("Session extension failed.");
         }
