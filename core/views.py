@@ -56,3 +56,12 @@ def extend_session(request):
         "ok": True,
         "remaining_seconds": request.session.get_expiry_age(),
     })
+
+# Force session timeout upon expiry
+@login_required
+@require_POST
+def expire_session(request):
+    logout(request)
+    return JsonResponse({
+        "ok": True
+    })
