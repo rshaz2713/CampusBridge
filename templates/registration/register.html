@@ -13,7 +13,7 @@
                     {% csrf_token %}
 
                     <div class="mb-4">
-                        <label for="{{ form.username.id_for_label }}" class="form-label custom-label">Username*</label>
+                        <label for="{{ form.username.id_for_label }}" class="form-label custom-label">Username<span class="text-danger">*</span></label>
                         {{ form.username }}
                         {% if form.username.errors %}
                             <div class="text-danger mt-2 small">
@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="{{ form.password1.id_for_label }}" class="form-label custom-label">Password*</label>
+                        <label for="{{ form.password1.id_for_label }}" class="form-label custom-label">Password<span class="text-danger">*</span></label>
                         {{ form.password1 }}
                         {% if form.password1.errors %}
                             <div class="text-danger mt-2 small">
@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="{{ form.password2.id_for_label }}" class="form-label custom-label">Confirm Password*</label>
+                        <label for="{{ form.password2.id_for_label }}" class="form-label custom-label">Confirm Password<span class="text-danger">*</span></label>
                         {{ form.password2 }}
                         {% if form.password2.errors %}
                             <div class="text-danger mt-2 small">
