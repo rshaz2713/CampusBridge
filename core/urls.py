@@ -5,4 +5,5 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("register/", views.register_view, name="register"),
     path("session/extend/", views.extend_session, name="extend_session"),
+    path("session/expire/", views.expire_session, name="expire_session"),
 ]

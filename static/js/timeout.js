@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let remaining = parseInt(banner.dataset.secondsRemaining, 10);
     const extendUrl = banner.dataset.extendUrl;
+    const expireUrl = banner.dataset.expireUrl;
+
     const warningThreshold = 30; // Adjustable, this is in seconds
 
     const titleEl = document.getElementById("session-timeout-title");
@@ -18,7 +20,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const extendBtn = document.getElementById("extend-session-btn");
     const reloginBtn = document.getElementById("relogin-btn");
 
+    let sessionExpiredHandled = false;
+
     console.log("Initial remaining seconds:", remaining);
+
+    // Time formatting for display
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    }
 
     // Retrieve a cookie by name; used for getting CSRF token for POST requests
     function getCookie(name) {
@@ -36,109 +47,113 @@ document.addEventListener("DOMContentLoaded", function () {
         return cookieValue;
     }
 
-    // Time formatting for display
-    function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    // Handle backend request
+    async function postSessionAction(url) {
+        const csrfToken = getCookie("csrftoken");
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            credentials: "same-origin"
+        });
+
+        return response;
     }
 
-    // Banner state functions. Hidden state
-    function hideBannerState() {
-        banner.classList.remove("is-visible", "alert-danger");
-        banner.classList.add("alert-warning");
+    // Render banner based on the state
+    function renderBanner(state) {
 
-        extendBtn.classList.remove("d-none");
+        const isHidden = state === "hidden";
+        const isExpired = state === "expired";
+        const isWarning = state === "warning";
+
+        banner.classList.toggle("is-visible", !isHidden);
+        banner.classList.toggle("alert-warning", isWarning || isHidden);
+        banner.classList.toggle("alert-danger", isExpired);
+
+        extendBtn.classList.toggle("d-none", isExpired);
         extendBtn.disabled = false;
-        reloginBtn.classList.add("d-none");
-    }
 
-    // Warning state
-    function showWarningState() {
-        banner.classList.add("is-visible");
-        banner.classList.remove("alert-danger");
-        banner.classList.add("alert-warning");
+        reloginBtn.classList.toggle("d-none", !isExpired);
 
-        titleEl.textContent = "Warning:";
-        textEl.textContent = "Your CampusBridge session will expire in";
-        countdownEl.textContent = formatTime(remaining);
-
-        extendBtn.classList.remove("d-none");
-        extendBtn.disabled = false;
-        reloginBtn.classList.add("d-none");
-    }
-
-    // Expired state (re-login required)
-    function showExpiredState() {
-        banner.classList.add("is-visible");
-        banner.classList.remove("alert-warning");
-        banner.classList.add("alert-danger");
-
-        titleEl.textContent = "Your session has expired.";
-        textEl.textContent = "Please log in again.";
-        countdownEl.textContent = "";
-
-        extendBtn.classList.add("d-none");
-        reloginBtn.classList.remove("d-none");
-    }
-
-    // Decides which UI state should be shown, rendered automatically
-    function updateUI() {
-        console.log("updateUI remaining =", remaining);
-
-        if (remaining <= 0) {
-            showExpiredState();
-        } else if (remaining <= warningThreshold) {
-            showWarningState();
-        } else {
-            hideBannerState();
+        if (isHidden) return;
+        
+        if (isWarning) {
+            titleEl.textContent = "Warning:";
+            textEl.textContent = "Your CampusBridge session will expire in";
+            countdownEl.textContent = formatTime(remaining);
+        } else { // expired
+            titleEl.textContent = "Your session has expired.";
+            textEl.textContent = "Please log in again.";
+            countdownEl.textContent = "";
         }
     }
 
-    updateUI();
+    // Decides which banner state should be shown, rendered automatically
+    function updateBannerUI() {
+        console.log("updateBannerUI remaining =", remaining);
+        
+        if (remaining <= 0) {
+            return renderBanner("expired");
+        } else if (remaining <= warningThreshold) {
+            return renderBanner("warning");
+        } else {
+            return renderBanner("hidden");
+        }
+    }
+
+    // Expires a session
+    async function expireSession() {
+
+        if (sessionExpiredHandled) return;
+        sessionExpiredHandled = true;
+
+        try {
+            await postSessionAction(expireUrl);
+            console.log("Session successfully expired on backend.");
+        } catch (error) {
+            console.error("Session expiration failed.");
+        }
+    }
+
+    updateBannerUI();
 
     // Set countdown timer
     const timer = setInterval(() => {
-        if (remaining <= 0) {
-            clearInterval(timer);
-            showExpiredState();
-            return;
-        }
 
         remaining -= 1;
         console.log("tick:", remaining);
-        updateUI();
+        updateBannerUI();
 
         if (remaining <= 0) {
             clearInterval(timer);
-            showExpiredState();
+            expireSession();
         }
     }, 1000);
 
     // Extend session upon request
     extendBtn.addEventListener("click", async function () {
+
         try {
-            const csrfToken = getCookie("csrftoken");
-
-            const response = await fetch(extendUrl, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": csrfToken,
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                credentials: "same-origin"
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to extend session.");
-            }
-
+            const response = await postSessionAction(extendUrl);
             const data = await response.json();
+
             remaining = parseInt(data.remaining_seconds, 10);
-            console.log("session extended:", remaining);
-            updateUI();
+            sessionExpiredHandled = false;
+
+            console.log("Session extended:", remaining);
+            updateBannerUI();
         } catch (error) {
-            console.error("Session extension failed:", error);
+            console.error("Session extension failed.");
+        }
+    });
+
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+            window.location.reload();
         }
     });
 });
