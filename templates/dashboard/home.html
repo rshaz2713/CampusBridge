@@ -7,9 +7,124 @@
     <div class="col-lg-10">
         <div class="card shadow p-4">
             <div class="card-body">
+
                 <h1 class="mb-3">Dashboard</h1>
-                <p class="lead">Welcome, {{ user.username }}</p>
-                <p>This is your CampusBridge dashboard.</p>
+                <p class="lead">
+                    {{ greeting }},
+                    {% if user.first_name %}
+                        {{ user.first_name }} {{ user.last_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                        ({{ role|title }})
+                </p>
+                
+                {% if role == "student" %}
+                    <h4 class="mt-4 mb-3">Student Tools</h4>
+
+                    <div class="row">
+
+                        <!-- Wellness -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-heart"></i> Wellness Services
+                                    </h5>
+                                    <p class="card-text">
+                                        Access mental health and wellness support.
+                                    </p>
+                                    <a href="https://www.ccsu.edu/student-wellness-services"
+                                       target="_blank"
+                                       class="btn btn-primary">
+                                       Visit
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Degree Audit -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-chart-line"></i> Degree Audit
+                                    </h5>
+                                    <p class="card-text">
+                                        Track your academic progress and plan courses.
+                                    </p>
+                                    <a href="#"
+                                       target="_blank"
+                                       class="btn btn-success">
+                                       Open
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Financial -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-dollar-sign"></i> Financial Documents
+                                    </h5>
+                                    <p class="card-text">
+                                        View tuition, aid packages, and tax documents.
+                                    </p>
+                                    <a href="#"
+                                       target="_blank"
+                                       class="btn btn-warning">
+                                       View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                {% elif role == "professor" %}
+                    <h4 class="mt-4">Professor Tools</h4>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">🔍 Search Student</h5>
+                                    <p class="card-text">
+                                        Find students by name or ID.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">📢 Announcements</h5>
+                                    <p class="card-text">
+                                        View faculty announcements.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">📚 Course Management</h5>
+                                    <p class="card-text">
+                                        Manage course materials and grading.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
             </div>
         </div>
     </div>
