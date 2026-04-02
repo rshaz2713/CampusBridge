@@ -8,7 +8,7 @@
     <div class="row align-items-center">
         <div class="col-lg-7 col-sm-10 col-12">
             {% if user.is_authenticated %}
-                <h1 class="display-3 text-sm-start text-center">Hello, {{ user.username }}!</h1>
+                <h1 class="display-3 text-sm-start text-center">Hello, {{ user.first_name }}!</h1>
                 <p class="lead text-sm-start text-center">Welcome back to CampusBridge.</p>
                 <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg d-sm-inline-block d-block">Go to Dashboard</a>
             {% else %}
