@@ -3,6 +3,7 @@ from core.forms.registration_form import CampusBridgeRegisterForm
 from django.http import JsonResponse
 
 class AuthService:
+
     @staticmethod
     def register_user(request):
         form = CampusBridgeRegisterForm(request.POST)
@@ -24,4 +25,6 @@ class AuthService:
     @staticmethod
     def expire_session(request):
         logout(request)
-        return JsonResponse({"ok": True})
+        return JsonResponse({
+            "ok": True
+        })
