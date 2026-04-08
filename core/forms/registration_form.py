@@ -5,23 +5,40 @@ from core.models import Profile
 class CampusBridgeRegisterForm(UserCreationForm):
     role = forms.ChoiceField(
         choices=Profile.ROLE_CHOICES,
-        widget=forms.Select(attrs={"class": "form-control custom-input"})
+        widget=forms.Select(attrs={
+            "class": "form-control custom-input"
+        })
     )
 
     first_name = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control custom-input", "placeholder": "Enter first name"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control custom-input",
+            "placeholder": "Enter first name"
+        })
     )
     last_name = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control custom-input", "placeholder": "Enter last name"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control custom-input",
+            "placeholder": "Enter last name"
+        })
     )
     username = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control custom-input", "placeholder": "Enter username"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control custom-input",
+            "placeholder": "Enter username"
+        })
     )
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control custom-input", "placeholder": "Enter password"})
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control custom-input",
+            "placeholder": "Enter password"
+        })
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control custom-input", "placeholder": "Confirm password"})
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control custom-input",
+            "placeholder": "Confirm password"
+        })
     )
 
     def save(self, commit=True):
