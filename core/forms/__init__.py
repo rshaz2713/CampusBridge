@@ -1,3 +1,3 @@
-from .registration_form import register_view
+from .registration_form import CampusBridgeRegisterForm
 
 __all__ = ["register_view",]
