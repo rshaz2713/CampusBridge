@@ -17,17 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from dashboard.views import dashboard_home
 
-
-# Root URL configuration. Routes traffic to appropriate Django apps.
-# You can check specific URLs of apps core and dashboard.
 urlpatterns = [
     path("admin/", admin.site.urls),
+
     path("", include("core.urls")),
-    path("accounts/login/", auth_views.LoginView.as_view(
-        template_name="registration/login.html"
-    ), name="login"),
+
+    path(
+        "accounts/login/",
+        auth_views.LoginView.as_view(template_name="registration/login.html"),
+        name="login"
+    ),
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("dashboard/", dashboard_home, name="dashboard_home"),
+
+    path("dashboard/", include("dashboard.urls")),
 ]

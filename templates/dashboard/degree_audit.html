@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Degree Audit | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-4">Degree Audit</h1>
+                {% if record %}
+                    <p><strong>Student Name:</strong> {{ record.full_name }}</p>
+                    <p><strong>Student ID:</strong> {{ record.student_id }}</p>
+                    <p><strong>Student Email:</strong> {{ record.email }}</p>
+                {% else %}
+                    <div class="alert alert-warning">
+                        No degree audit information found.
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

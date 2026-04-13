@@ -9,7 +9,6 @@
             <div class="card-body">
                 <h1 class="display-3 text-center login-title">Register</h1>
 
-                <!-- Top error box ONLY -->
                 {% if form.errors %}
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -18,7 +17,6 @@
                                 <li>{{ error }}</li>
                             {% endfor %}
                         {% endfor %}
-
                         {% for error in form.non_field_errors %}
                             <li>{{ error }}</li>
                         {% endfor %}
@@ -29,46 +27,36 @@
                 <form method="post" novalidate>
                     {% csrf_token %}
 
-                    <!-- Username -->
                     <div class="mb-4">
-                        <label for="{{ form.username.id_for_label }}" class="form-label custom-label"> Username*</label>
-                        
-                        <div class="mb-4">
-                            <label for="{{ form.first_name.id_for_label }}" class="form-label custom-label">First Name*</label>{{ form.first_name }}
-                        </div>
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label custom-label">First Name*</label>
+                        {{ form.first_name }}
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="{{ form.last_name.id_for_label }}" class="form-label custom-label">Last Name*</label>{{ form.last_name }}
-                        </div>
+                    <div class="mb-4">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label custom-label">Last Name*</label>
+                        {{ form.last_name }}
+                    </div>
 
+                    <div class="mb-4">
+                        <label for="{{ form.username.id_for_label }}" class="form-label custom-label">Username*</label>
                         {{ form.username }}
                     </div>
 
-                    <!-- Role (NEW) -->
                     <div class="mb-4">
-                        <label for="{{ form.role.id_for_label }}" class="form-label custom-label">
-                            Role*
-                        </label>
+                        <label for="{{ form.role.id_for_label }}" class="form-label custom-label">Role*</label>
                         {{ form.role }}
                     </div>
 
-                    <!-- Password -->
                     <div class="mb-4">
-                        <label for="{{ form.password1.id_for_label }}" class="form-label custom-label">
-                            Password*
-                        </label>
+                        <label for="{{ form.password1.id_for_label }}" class="form-label custom-label">Password*</label>
                         {{ form.password1 }}
                     </div>
 
-                    <!-- Confirm Password -->
                     <div class="mb-4">
-                        <label for="{{ form.password2.id_for_label }}" class="form-label custom-label">
-                            Confirm Password*
-                        </label>
+                        <label for="{{ form.password2.id_for_label }}" class="form-label custom-label">Confirm Password*</label>
                         {{ form.password2 }}
                     </div>
 
-                    <!-- Submit -->
                     <div class="d-grid my-4">
                         <button class="btn btn-outline-primary btn-lg login-btn" type="submit">
                             <i class="fas fa-user-plus"></i> Create Account
@@ -76,14 +64,12 @@
                     </div>
                 </form>
 
-                <!-- Login link -->
                 <div class="text-center">
                     <p class="small fw-bold my-3 pt-1 mb-0">
                         Already have an account?
                         <a href="{% url 'login' %}" class="link-primary">Login</a>
                     </p>
                 </div>
-
             </div>
         </div>
     </div>
