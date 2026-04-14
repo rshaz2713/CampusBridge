@@ -16,14 +16,17 @@
                     {% else %}
                         {{ user.username }}
                     {% endif %}
-                        ({{ role|title }})
+                    ({{ role|title }})
                 </p>
+
+                {% include "dashboard/_pinned_resources.html" %}
                 
                 {% if role == "student" %}
                     <h4 class="mt-4 mb-3">Student Tools</h4>
 
                     <div class="row">
 
+                        <!-- Card 1: Wellness Services -->
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm text-center">
                                 <div class="card-body">
@@ -36,10 +39,25 @@
                                     <a href="https://www.ccsu.edu/student-wellness-services" target="_blank" class="btn btn-primary mx-3 px-4 d-sm-inline-block d-block">
                                        Visit
                                     </a>
+                                    
+                                    <!-- PIN BUTTON -->
+                                    <form method="post" action="{% url 'toggle_pin' 'wellness' %}" class="mt-2 d-inline">
+                                        {% csrf_token %}
+                                        {% if 'wellness' in pinned_urls %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Unpin
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Card 2: Degree Audit -->
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm text-center">
                                 <div class="card-body">
@@ -52,10 +70,25 @@
                                     <a href="#" target="_blank" class="btn btn-success mx-3 px-4 d-sm-inline-block d-block">
                                        Open
                                     </a>
+                                    
+                                    <!-- PIN BUTTON -->
+                                    <form method="post" action="{% url 'toggle_pin' 'degree-audit' %}" class="mt-2 d-inline">
+                                        {% csrf_token %}
+                                        {% if 'degree-audit' in pinned_urls %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Unpin
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Card 3: Financial Documents -->
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm text-center">
                                 <div class="card-body">
@@ -68,6 +101,20 @@
                                     <a href="#" target="_blank" class="btn btn-warning mx-3 px-4 d-sm-inline-block d-block">
                                        View
                                     </a>
+                                    
+                                    <!-- PIN BUTTON -->
+                                    <form method="post" action="{% url 'toggle_pin' 'financial-docs' %}" class="mt-2 d-inline">
+                                        {% csrf_token %}
+                                        {% if 'financial-docs' in pinned_urls %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Unpin
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -79,6 +126,7 @@
 
                     <div class="row">
 
+                        <!-- Card 1: Search Student -->
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm text-center">
                                 <div class="card-body">
@@ -86,10 +134,25 @@
                                     <p class="card-text">
                                         Find students by name or ID.
                                     </p>
+                                    
+                                    <!-- PIN BUTTON -->
+                                    <form method="post" action="{% url 'toggle_pin' 'search-student' %}" class="mt-2">
+                                        {% csrf_token %}
+                                        {% if 'search-student' in pinned_urls %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Unpin
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Card 2: Announcements -->
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm text-center">
                                 <div class="card-body">
@@ -97,10 +160,25 @@
                                     <p class="card-text">
                                         View faculty announcements.
                                     </p>
+                                    
+                                    <!-- PIN BUTTON -->
+                                    <form method="post" action="{% url 'toggle_pin' 'announcements' %}" class="mt-2">
+                                        {% csrf_token %}
+                                        {% if 'announcements' in pinned_urls %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Unpin
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Card 3: Course Management -->
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm text-center">
                                 <div class="card-body">
@@ -108,6 +186,20 @@
                                     <p class="card-text">
                                         Manage course materials and grading.
                                     </p>
+                                    
+                                    <!-- PIN BUTTON -->
+                                    <form method="post" action="{% url 'toggle_pin' 'course-management' %}" class="mt-2">
+                                        {% csrf_token %}
+                                        {% if 'course-management' in pinned_urls %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Unpin
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -120,4 +212,13 @@
         </div>
     </div>
 </div>
+
+<!-- DEBUG: Remove this after fixing -->
+<div style="background: yellow; padding: 20px; border: 5px solid red;">
+    <strong>DEBUG INFO:</strong><br>
+    pinned_resources count: {{ pinned_resources.count }}<br>
+    pinned_urls: {{ pinned_urls }}<br>
+    pinned_resources list: {{ pinned_resources }}
+</div>
+
 {% endblock %}
