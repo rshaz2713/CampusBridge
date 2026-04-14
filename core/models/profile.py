@@ -12,7 +12,10 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="student")
-
+    # Optional helper method
+    def get_pinned_count(self):
+        return self.pinned_resources.count()
+    
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
