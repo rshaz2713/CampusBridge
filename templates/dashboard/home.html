@@ -37,13 +37,11 @@
 
                                                 <p class="card-text">{{ r.description }}</p>
 
-                                                <a href="{{ r.url }}"
-                                                target="_blank"
-                                                class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
+                                                <a href="{{ r.url }}" target="_blank" class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
                                                     {{ r.button }}
                                                 </a>
 
-                                                <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-inline">
+                                                <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-sm-inline-block d-block">
                                                     {% csrf_token %}
                                                     <button type="submit" class="btn btn-outline-danger btn-sm">
                                                         <i class="fas fa-thumbtack"></i> Unpin
@@ -76,13 +74,11 @@
 
                                         <p class="card-text">{{ r.description }}</p>
 
-                                        <a href="{{ r.url }}"
-                                           target="_blank"
-                                           class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
+                                        <a href="{{ r.url }}" target="_blank" class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
                                             {{ r.button }}
                                         </a>
 
-                                        <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-inline">
+                                        <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-sm-inline-block d-block">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-outline-primary btn-sm">
                                                 <i class="fas fa-thumbtack"></i> Pin
