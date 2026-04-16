@@ -1,40 +1,117 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from core.models import Profile
 from datetime import datetime
-from core.constants.resources import RESOURCE_INFO
-
-# Main dashboard view, requires authentication. If there's no logged in user,
-# Django automatially redirects them to /accounts/login URL.
+from django import forms
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from core.models import Profile
+from .models import StudentRecord, ProfessorRecord, Course, Announcement, AnnouncementRead
+from django.shortcuts import get_object_or_404
 
 @login_required
 def dashboard_home(request):
-    profile = Profile.objects.get(user=request.user)
+    role = request.user.profile.role
+
+    unread_announcements = Announcement.objects.exclude(
+        announcementread__user=request.user,
+        announcementread__is_read=True
+    )
+
+    return render(request, "dashboard/home.html", {
+        "role": role,
+        "announcements": unread_announcements
+    })
+
     role = profile.role
-
-    resources = [
-        {'id': key, **value}
-        for key, value in RESOURCE_INFO.items()
-        if role in value["roles"]
-    ]
-    
-    from datetime import datetime
     hour = datetime.now().hour
+
     if hour < 12:
-        greeting = "Good morning"
+        greeting = "Good Morning"
     elif hour < 18:
-        greeting = "Good afternoon"
+        greeting = "Good Afternoon"
     else:
-        greeting = "Good evening"
-    
-    pinned_ids_ordered = list(profile.pinned_resources.values_list('resource_id', flat=True))
+        greeting = "Good Evening"
 
-    context = {
-        'user': request.user,
-        'role': role,
-        'greeting': greeting,
-        'pinned_urls': pinned_ids_ordered,
-        'resources': resources,
-    }
+    return render(request, "dashboard/home.html", {
+        "role": role,
+        "greeting": greeting
+    })
 
-    return render(request, 'dashboard/home.html', context)
+class AnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = Announcement
+        fields = ["title", "message"]
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter announcement title"
+            }),
+            "message": forms.Textarea(attrs={
+                "class": "form-control",
+                "placeholder": "Enter announcement message",
+                "rows": 4
+            }),
+        }
+        
+@login_required
+def create_announcement_view(request):
+    profile, created = Profile.objects.get_or_create(
+        user=request.user,
+        defaults={"role": "student"}
+    )
+
+    if profile.role != "professor":
+        return render(request, "dashboard/access_denied.html")
+
+    if request.method == "POST":
+        form = AnnouncementForm(request.POST)
+        if form.is_valid():
+            announcement = form.save(commit=False)
+            announcement.professor = request.user
+            announcement.save()
+            return redirect("dashboard_home")
+    else:
+        form = AnnouncementForm()
+
+    return render(request, "dashboard/create_announcement.html", {"form": form})
+
+@login_required
+def announcement_list_view(request):
+    announcements = Announcement.objects.all().order_by("-created_at")
+    return render(request, "dashboard/professor_announcement.html", {"announcements": announcements})
+
+@login_required
+def announcement_detail_view(request, announcement_id):
+   announcement = get_object_or_404(Announcement, id=announcement_id)
+
+    # mark as read
+   AnnouncementRead.objects.update_or_create(
+        user=request.user,
+        announcement=announcement,
+        defaults={'is_read': True}
+    )
+
+   return render(request, "dashboard/announcement_details.html", {
+        "announcement": announcement
+    })
+
+@login_required
+def degree_audit_view(request):
+    record = StudentRecord.objects.filter(user=request.user).first()
+    return render(request, "dashboard/degree_audit.html", {"record": record})
+
+@login_required
+def professor_search_view(request):
+    query = request.GET.get("q", "").strip()
+    all_students = StudentRecord.objects.all().order_by("student_id")
+    search_results = StudentRecord.objects.none()
+
+    if query:
+        if query.isdigit():
+            search_results = StudentRecord.objects.filter(student_id=int(query))
+        else:
+            search_results = StudentRecord.objects.filter(full_name__icontains=query)
+
+    return render(request, "dashboard/professor_search.html", {
+        "query": query,
+        "search_results": search_results,
+        "all_students": all_students,
+    })

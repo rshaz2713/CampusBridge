@@ -19,7 +19,6 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from dashboard.views import dashboard_home
 
-
 # Root URL configuration. Routes traffic to appropriate Django apps.
 # You can check specific URLs of apps core and dashboard.
 urlpatterns = [

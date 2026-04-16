@@ -20,16 +20,52 @@
     <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">CampusBridge</a>
 
-        {% if user.is_authenticated %}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+
+                    <li class="nav-item dropdown me-3">
+                        <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                            {% if unread_announcements and role == "student" %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ announcements|length }}
+                                </span>
+                            {% endif %}
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px;">
+                            <li class="dropdown-header">Notifications</li>
+
+                            {% if role == "student" and announcements %}
+                                {% for item in unread_announcements %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'announcement_details' item.id %}">
+                                            <strong>{{ item.title }}</strong><br>
+                                                <small class="text-muted">{{ item.created_at|date:"M d, h:i A" }}</small>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-center" href="{% url 'professor_announcement' %}">
+                                        View all announcements
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li><span class="dropdown-item-text">No notifications</span></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#"
+                           role="button" aria-expanded="false">
                             {{ user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -43,9 +79,9 @@
                             </li>
                         </ul>
                     </li>
-                </ul>
-            </div>
-        {% endif %}
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </nav>
 

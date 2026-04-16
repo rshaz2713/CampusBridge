@@ -8,22 +8,6 @@
         <div class="card login-card">
             <div class="card-body">
                 <h1 class="display-3 text-center login-title">Register</h1>
-<!--               
-                {% if form.errors %}
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        {% endfor %}
-
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %} -->
 
                 <form method="post" novalidate>
                     {% csrf_token %}

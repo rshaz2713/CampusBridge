@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Announcements | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-4">Announcements</h1>
+
+                {% if announcements %}
+                    {% for announcement in announcements %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>
+                                    <a href="{% url 'announcement_details' announcement.id %}">
+                                        {{ announcement.title }}
+                                    </a>
+                                </h5>
+                                <p class="mb-1">{{ announcement.message|truncatechars:100 }}</p>
+                                <small class="text-muted">
+                                    Posted by {{ announcement.professor.first_name }} {{ announcement.professor.last_name }}
+                                    on {{ announcement.created_at|date:"M d, Y h:i A" }}
+                                </small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-secondary">No announcements available.</div>
+                {% endif %}
+
+                <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

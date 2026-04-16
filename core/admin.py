@@ -8,7 +8,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = ("role",)
     search_fields = ("user__username",)
 
-@admin.register(PinnedResource)  # ✅ Register PinnedResource
+@admin.register(PinnedResource)
 class PinnedResourceAdmin(admin.ModelAdmin):
     list_display = ['profile', 'title', 'url', 'pinned_at']
     list_filter = ['pinned_at']
