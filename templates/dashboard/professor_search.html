@@ -3,10 +3,9 @@
 {% block title %}Search Student | CampusBridge{% endblock %}
 
 {% block content %}
-<div class="row">
-    <!-- Left side: search card -->
-    <div class="col-lg-4 mb-4">
-        <div class="card shadow p-4 h-100">
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow p-4">
             <div class="card-body">
                 <h1 class="mb-4">Search Student</h1>
 
@@ -25,7 +24,7 @@
 
                 {% if query %}
                     <hr class="my-4">
-                    <h4 class="mb-3">Search Result</h4>
+                    <h4 class="mb-3">Search Results</h4>
 
                     {% if search_results %}
                         {% for student in search_results %}
@@ -45,40 +44,6 @@
                 <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-4">
                     Back to Dashboard
                 </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Right side: always show full table -->
-    <div class="col-lg-8">
-        <div class="card shadow p-4">
-            <div class="card-body">
-                <h2 class="mb-4">Student Records</h2>
-
-                {% if all_students %}
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Student ID</th>
-                                <th>Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student in all_students %}
-                            <tr>
-                                <td>{{ student.full_name }}</td>
-                                <td>{{ student.student_id }}</td>
-                                <td>{{ student.email }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <div class="alert alert-warning">
-                        No student records available.
-                    </div>
-                {% endif %}
             </div>
         </div>
     </div>
