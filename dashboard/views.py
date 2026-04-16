@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from core.models import Profile
 from .models import StudentRecord, ProfessorRecord, Course, Announcement, AnnouncementRead
+from django.shortcuts import get_object_or_404
 
 
 #This will show the professors announcements on the students dashboard
@@ -85,16 +86,16 @@ def announcement_list_view(request):
 
 @login_required
 def announcement_detail_view(request, announcement_id):
-    announcement = Announcement.objects.get(id=announcement_id)
+   announcement = get_object_or_404(Announcement, id=announcement_id)
 
     # mark as read
-    AnnouncementRead.objects.update_or_create(
+   AnnouncementRead.objects.update_or_create(
         user=request.user,
         announcement=announcement,
         defaults={'is_read': True}
     )
 
-    return render(request, "dashboard/announcement_details.html", {
+   return render(request, "dashboard/announcement_details.html", {
         "announcement": announcement
     })
 

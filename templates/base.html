@@ -28,7 +28,7 @@
                     <li class="nav-item dropdown me-3">
                         <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-bell"></i>
-                            {% if announcements and role == "student" %}
+                            {% if unread_announcements and role == "student" %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     {{ announcements|length }}
                                 </span>
@@ -39,11 +39,11 @@
                             <li class="dropdown-header">Notifications</li>
 
                             {% if role == "student" and announcements %}
-                                {% for item in announcements %}
+                                {% for item in unread_announcements %}
                                     <li>
                                         <a class="dropdown-item" href="{% url 'announcement_details' item.id %}">
                                             <strong>{{ item.title }}</strong><br>
-                                            <small class="text-muted">{{ item.created_at|date:"M d, h:i A" }}</small>
+                                                <small class="text-muted">{{ item.created_at|date:"M d, h:i A" }}</small>
                                         </a>
                                     </li>
                                 {% endfor %}
