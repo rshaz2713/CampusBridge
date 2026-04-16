@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-# STUDENT TABLE
+# Student table
 class StudentRecord(models.Model):
     user = models.OneToOneField(
         User,
@@ -19,8 +18,7 @@ class StudentRecord(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.student_id})"
 
-
-# PROFESSOR TABLE
+# Professor table
 class ProfessorRecord(models.Model):
     user = models.OneToOneField(
         User,
@@ -38,9 +36,7 @@ class ProfessorRecord(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.professor_id})"
 
-
-
-# COURSE TABLE
+# Course table
 class Course(models.Model):
     course_code = models.CharField(max_length=20)
     course_name = models.CharField(max_length=100)
@@ -64,7 +60,7 @@ class Announcement(models.Model):
     def __str__(self):
         return self.title
 
-#This model tracks which announcements have been read by which students
+# Tracks which announcements have been read by which students
 class AnnouncementRead(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE)

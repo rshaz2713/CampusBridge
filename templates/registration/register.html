@@ -4,59 +4,86 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-lg-6">
+    <div class="col d-flex justify-content-center">
         <div class="card login-card">
             <div class="card-body">
                 <h1 class="display-3 text-center login-title">Register</h1>
 
-                {% if form.errors %}
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        {% endfor %}
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-
                 <form method="post" novalidate>
                     {% csrf_token %}
-
+                  
                     <div class="mb-4">
-                        <label for="{{ form.first_name.id_for_label }}" class="form-label custom-label">First Name*</label>
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label custom-label">First Name<span class="text-danger">*</span></label>
                         {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger mt-2 small">
+                                {% for error in form.first_name.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-
+                  
                     <div class="mb-4">
-                        <label for="{{ form.last_name.id_for_label }}" class="form-label custom-label">Last Name*</label>
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label custom-label">Last Name<span class="text-danger">*</span></label>
                         {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger mt-2 small">
+                                {% for error in form.last_name.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="mb-4">
-                        <label for="{{ form.username.id_for_label }}" class="form-label custom-label">Username*</label>
+                        <label for="{{ form.username.id_for_label }}" class="form-label custom-label">Username<span class="text-danger">*</span></label>
                         {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger mt-2 small">
+                                {% for error in form.username.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="mb-4">
-                        <label for="{{ form.role.id_for_label }}" class="form-label custom-label">Role*</label>
+                        <label for="{{ form.role.id_for_label }}" class="form-label custom-label">Role<span class="text-danger">*</span></label>
                         {{ form.role }}
+                        {% if form.role.errors %}
+                            <div class="text-danger mt-2 small">
+                                {% for error in form.role.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="mb-4">
-                        <label for="{{ form.password1.id_for_label }}" class="form-label custom-label">Password*</label>
+                        <label for="{{ form.password1.id_for_label }}" class="form-label custom-label">Password<span class="text-danger">*</span></label>
                         {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            <div class="text-danger mt-2 small">
+                                {% for error in form.password1.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-
+                  
                     <div class="mb-4">
-                        <label for="{{ form.password2.id_for_label }}" class="form-label custom-label">Confirm Password*</label>
+                        <label for="{{ form.password2.id_for_label }}" class="form-label custom-label">Confirm Password<span class="text-danger">*</span></label>
                         {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <div class="text-danger mt-2 small">
+                                {% for error in form.password2.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-
+                  
                     <div class="d-grid my-4">
                         <button class="btn btn-outline-primary btn-lg login-btn" type="submit">
                             <i class="fas fa-user-plus"></i> Create Account

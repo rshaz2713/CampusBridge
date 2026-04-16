@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}{{ user.username }}'s Dashboard | CampusBridge{% endblock %}
+{% block title %}{{ user.first_name }}'s Dashboard | CampusBridge{% endblock %}
 
 {% block content %}
+
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="card shadow p-4">
             <div class="card-body">
 
                 <h1 class="mb-3">Dashboard</h1>
-
                 <p class="lead">
-                    {% if greeting %}{{ greeting }}, {% endif %}
+                    {{ greeting }},
                     {% if user.first_name %}
                         {{ user.first_name }} {{ user.last_name }}
                     {% else %}
@@ -20,107 +20,81 @@
                     ({{ role|title }})
                 </p>
 
-                {% if role == "student" %}
-                    <h4 class="mt-4 mb-3">Student Tools</h4>
+                {% if pinned_urls %}
+                    <h4 class="mt-4 mb-3">Pinned Resources</h4>
 
                     <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-heart"></i> Wellness Services
-                                    </h5>
-                                    <p class="card-text">
-                                        Access mental health and wellness support.
-                                    </p>
-                                    <a href="https://www.ccsu.edu/student-wellness-services"
-                                       target="_blank"
-                                       rel="noopener noreferrer"
-                                       class="btn btn-primary">
-                                       Visit
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        {% for rid in pinned_urls %}
+                            {% for r in resources %}
+                                {% if r.id == rid %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100 shadow-sm text-center">
+                                            <div class="card-body">
 
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-chart-line"></i> Degree Audit
-                                    </h5>
-                                    <p class="card-text">
-                                        View your name and student ID for planning.
-                                    </p>
-                                    <a href="{% url 'degree_audit' %}" class="btn btn-success">
-                                       Open
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                                                <h5 class="card-title">
+                                                    <i class="{{ r.icon }}"></i> {{ r.title }}
+                                                </h5>
 
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-dollar-sign"></i> Financial Documents
-                                    </h5>
-                                    <p class="card-text">
-                                        View tuition, aid packages, and tax documents.
-                                    </p>
-                                    <a href="#" class="btn btn-warning">
-                                       View
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                                <p class="card-text">{{ r.description }}</p>
 
-                {% elif role == "professor" %}
-                    <h4 class="mt-4 mb-3">Professor Tools</h4>
+                                                <a href="{{ r.url }}" target="_blank" class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
+                                                    {{ r.button }}
+                                                </a>
 
-                    <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title">🔍 Search Student</h5>
-                                    <p class="card-text">
-                                        Search student by name or ID.
-                                    </p>
-                                    <a href="{% url 'professor_search' %}" class="btn btn-primary">
-                                        Search
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                                                <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-sm-inline-block d-block">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                        <i class="fas fa-thumbtack"></i> Unpin
+                                                    </button>
+                                                </form>
 
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title">📢 Announcements</h5>
-                                    <p class="card-text">
-                                        View faculty announcements.
-                                    </p>
-                                    <a href="{% url 'create_announcement' %}" class="btn btn-primary"> Create Announcement </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title">📚 Course Management</h5>
-                                    <p class="card-text">
-                                        Manage course materials and grading.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
                     </div>
                 {% endif %}
+
+                <h4 class="mt-4 mb-3">
+                    {% if role == "student" %}Student Tools{% else %}Professor Tools{% endif %}
+                </h4>
+
+                <div class="row">
+                    {% for r in resources %}
+                        {% if r.id not in pinned_urls %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm text-center">
+                                    <div class="card-body">
+
+                                        <h5 class="card-title">
+                                            <i class="{{ r.icon }}"></i> {{ r.title }}
+                                        </h5>
+
+                                        <p class="card-text">{{ r.description }}</p>
+
+                                        <a href="{{ r.url }}" target="_blank" class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
+                                            {{ r.button }}
+                                        </a>
+
+                                        <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-sm-inline-block d-block">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

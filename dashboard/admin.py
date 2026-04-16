@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import StudentRecord, ProfessorRecord, Course, Announcement
 
-
 @admin.register(StudentRecord)
 class StudentRecordAdmin(admin.ModelAdmin):
     list_display = ("full_name", "student_id", "email", "user")

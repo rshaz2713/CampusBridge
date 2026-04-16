@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'dashboard',   
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.session_timeout_info',
                 'dashboard.context_processors.announcement_notifications',
             ],
         },
@@ -132,4 +133,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
-
+# Predictable timeout
+SESSION_COOKIE_AGE = 60 # Adjustable, this is in seconds
+SESSION_SAVE_EVERY_REQUEST = True

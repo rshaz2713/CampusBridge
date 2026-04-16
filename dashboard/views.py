@@ -6,13 +6,10 @@ from core.models import Profile
 from .models import StudentRecord, ProfessorRecord, Course, Announcement, AnnouncementRead
 from django.shortcuts import get_object_or_404
 
-
-#This will show the professors announcements on the students dashboard
 @login_required
 def dashboard_home(request):
     role = request.user.profile.role
 
-    # get unread announcements for this user
     unread_announcements = Announcement.objects.exclude(
         announcementread__user=request.user,
         announcementread__is_read=True
@@ -54,7 +51,6 @@ class AnnouncementForm(forms.ModelForm):
             }),
         }
         
-# This adds the professor announcement view
 @login_required
 def create_announcement_view(request):
     profile, created = Profile.objects.get_or_create(
@@ -77,12 +73,10 @@ def create_announcement_view(request):
 
     return render(request, "dashboard/create_announcement.html", {"form": form})
 
-
 @login_required
 def announcement_list_view(request):
     announcements = Announcement.objects.all().order_by("-created_at")
     return render(request, "dashboard/professor_announcement.html", {"announcements": announcements})
-
 
 @login_required
 def announcement_detail_view(request, announcement_id):
@@ -98,9 +92,6 @@ def announcement_detail_view(request, announcement_id):
    return render(request, "dashboard/announcement_details.html", {
         "announcement": announcement
     })
-
-
-
 
 @login_required
 def degree_audit_view(request):
