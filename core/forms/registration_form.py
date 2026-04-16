@@ -23,6 +23,12 @@ class CampusBridgeRegisterForm(UserCreationForm):
             "placeholder": "Enter last name"
         })
     )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            "class": "form-control custom-input",
+            "placeholder": "Enter email"
+        })
+    )
     username = forms.CharField(
         widget=forms.TextInput(attrs={
             "class": "form-control custom-input",
@@ -46,6 +52,7 @@ class CampusBridgeRegisterForm(UserCreationForm):
         user = super().save(commit=False)
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
+        user.email = self.cleaned_data["email"]
 
         if commit:
             user.save()
