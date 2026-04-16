@@ -3,26 +3,16 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from core.models import Profile
+from core.constants.resources import RESOURCE_INFO
 from .models import StudentRecord, ProfessorRecord, Course, Announcement, AnnouncementRead
 from django.shortcuts import get_object_or_404
 
 @login_required
 def dashboard_home(request):
-    role = request.user.profile.role
+    profile = request.user.profile
+    role = profile.role.lower()
 
-    unread_announcements = Announcement.objects.exclude(
-        announcementread__user=request.user,
-        announcementread__is_read=True
-    )
-
-    return render(request, "dashboard/home.html", {
-        "role": role,
-        "announcements": unread_announcements
-    })
-
-    role = profile.role
     hour = datetime.now().hour
-
     if hour < 12:
         greeting = "Good Morning"
     elif hour < 18:
@@ -30,9 +20,27 @@ def dashboard_home(request):
     else:
         greeting = "Good Evening"
 
+    unread_announcements = Announcement.objects.exclude(
+        announcementread__user=request.user,
+        announcementread__is_read=True
+    )
+
+    pinned_urls = list(
+        profile.pinned_resources.values_list("resource_id", flat=True)
+    )
+
+    resources = [
+        {"id": rid, **data}
+        for rid, data in RESOURCE_INFO.items()
+        if role in data["roles"]
+    ]
+
     return render(request, "dashboard/home.html", {
         "role": role,
-        "greeting": greeting
+        "greeting": greeting,
+        "resources": resources,
+        "pinned_urls": pinned_urls,
+        "announcements": unread_announcements,
     })
 
 class AnnouncementForm(forms.ModelForm):
