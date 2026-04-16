@@ -10,16 +10,16 @@ RESOURCE_INFO = {
     },
     'degree-audit': {
         'title': 'Degree Audit',
-        'url': '#',
+        'url': '/dashboard/degree-audit/',
         'description': 'Track your academic progress and plan courses.',
         'icon': 'fas fa-chart-line',
-        'button': 'Open',
+        'button': 'View',
         'btn_class': 'btn-success',
         'roles': ['student'],
     },
     'financial-docs': {
         'title': 'Financial Documents',
-        'url': '#',
+        'url': '#', # TODO: Implement this
         'description': 'View tuition, aid packages, and tax documents.',
         'icon': 'fas fa-dollar-sign',
         'button': 'View',
@@ -28,7 +28,7 @@ RESOURCE_INFO = {
     },
     'search-student': {
         'title': 'Search Student',
-        'url': '#',
+        'url': '/dashboard/search-student/',
         'description': 'Find students by name or ID.',
         'icon': 'fas fa-search',
         'button': 'Open',
@@ -37,16 +37,16 @@ RESOURCE_INFO = {
     },
     'announcements': {
         'title': 'Announcements',
-        'url': '#',
-        'description': 'View faculty announcements.',
+        'url': '/dashboard/create-announcement/',
+        'description': 'Create announcements for students.',
         'icon': 'fas fa-bullhorn',
-        'button': 'View',
+        'button': 'Open',
         'btn_class': 'btn-warning',
         'roles': ['professor'],
     },
     'course-management': {
         'title': 'Course Management',
-        'url': '#',
+        'url': '#', # TODO: Implement this
         'description': 'Manage course materials and grading.',
         'icon': 'fas fa-book',
         'button': 'Open',
