@@ -30,36 +30,43 @@
                 {% if user.is_authenticated %}
 
                     <li class="nav-item dropdown me-3">
-                        <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-bell"></i>
-                            {% if unread_announcements and role == "student" %}
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ announcements|length }}
-                                </span>
-                            {% endif %}
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="position-relative d-inline-flex align-items-center justify-content-center" style="width: 20px; height: 20px;">
+                                <i class="fas fa-bell"></i>
+
+                                {% if role == "student" and unread_announcements %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ unread_announcements|length }}
+                                    </span>
+                                {% endif %}
+                            </span>
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px;">
                             <li class="dropdown-header">Notifications</li>
 
-                            {% if role == "student" and announcements %}
+                            {% if role == "student" and unread_announcements %}
                                 {% for item in unread_announcements %}
                                     <li>
                                         <a class="dropdown-item" href="{% url 'announcement_details' item.id %}">
                                             <strong>{{ item.title }}</strong><br>
-                                                <small class="text-muted">{{ item.created_at|date:"M d, h:i A" }}</small>
+                                            <small class="text-muted">{{ item.created_at|date:"M d, h:i A" }}</small>
                                         </a>
                                     </li>
                                 {% endfor %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item text-center" href="{% url 'professor_announcement' %}">
-                                        View all announcements
-                                    </a>
-                                </li>
                             {% else %}
                                 <li><span class="dropdown-item-text">No notifications</span></li>
                             {% endif %}
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-center"
+                                href="{% url 'professor_announcement' %}"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                    View all announcements
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
