@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from core.models import Profile
+from dashboard.models import StudentRecord, ProfessorRecord
 
 class CampusBridgeRegisterForm(UserCreationForm):
     role = forms.ChoiceField(
@@ -48,8 +49,31 @@ class CampusBridgeRegisterForm(UserCreationForm):
 
         if commit:
             user.save()
+
             role = self.cleaned_data["role"]
             user.profile.role = role
             user.profile.save()
+
+            full_name = f"{user.first_name} {user.last_name}".strip() or user.username
+            email = user.email or ""
+
+            if role == "student":
+                StudentRecord.objects.get_or_create(
+                    user=user,
+                    defaults={
+                        "student_id": user.id + 1000,
+                        "full_name": full_name,
+                        "email": email,
+                    }
+                )
+            elif role == "professor":
+                ProfessorRecord.objects.get_or_create(
+                    user=user,
+                    defaults={
+                        "professor_id": user.id + 5000,
+                        "full_name": full_name,
+                        "email": email,
+                    }
+                )
 
         return user
