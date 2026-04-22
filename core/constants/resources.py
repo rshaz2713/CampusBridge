@@ -19,7 +19,7 @@ RESOURCE_INFO = {
     },
     'financial-docs': {
         'title': 'Financial Documents',
-        'url': '#', # TODO: Implement this
+        'url': '/dashboard/resource-unavailable/financial-docs/', # TODO: Implement this
         'description': 'View tuition, aid packages, and tax documents.',
         'icon': 'fas fa-dollar-sign',
         'button': 'View',
@@ -46,7 +46,7 @@ RESOURCE_INFO = {
     },
     'course-management': {
         'title': 'Course Management',
-        'url': '#', # TODO: Implement this
+        'url': '/dashboard/resource-unavailable/course-management/', # TODO: Implement this
         'description': 'Manage course materials and grading.',
         'icon': 'fas fa-book',
         'button': 'Open',

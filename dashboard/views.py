@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from core.models import Profile
 from core.constants.resources import RESOURCE_INFO
-from .models import StudentRecord, ProfessorRecord, Course, Announcement, AnnouncementRead
+from .models import StudentRecord, Announcement, AnnouncementRead
 from django.shortcuts import get_object_or_404
 
 @login_required
@@ -122,4 +122,14 @@ def professor_search_view(request):
         "query": query,
         "search_results": search_results,
         "all_students": all_students,
+    })
+
+@login_required
+def resource_unavailable(request, resource_id):
+    resource = RESOURCE_INFO.get(resource_id)
+
+    resource_title = resource["title"] if resource else "This resource"
+
+    return render(request, "dashboard/resource_unavailable.html", {
+        "resource_title": resource_title,
     })
