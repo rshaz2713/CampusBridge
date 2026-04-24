@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Update Grade | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-4">Update Grade</h1>
+
+                <p><strong>Student:</strong> {{ enrollment.student.full_name }}</p>
+                <p><strong>Course:</strong> {{ enrollment.course.course_code }} - {{ enrollment.course.course_name }}</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Grade</label>
+                        {{ form.grade }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Grade</button>
+                    <a href="{% url 'course_detail' enrollment.course.id %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
