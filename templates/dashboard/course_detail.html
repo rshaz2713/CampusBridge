@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Course Detail | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-3">{{ course.course_code }} - {{ course.course_name }}</h1>
+                <p><strong>Semester:</strong> {{ course.semester }}</p>
+                <p><strong>Section:</strong> {{ course.section }}</p>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if enrollments %}
+                    <table class="table table-bordered mt-4">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Email</th>
+                                <th>Grade</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in enrollments %}
+                                <tr>
+                                    <td>{{ enrollment.student.full_name }}</td>
+                                    <td>{{ enrollment.student.student_id }}</td>
+                                    <td>{{ enrollment.student.email }}</td>
+                                    <td>
+                                        {% if enrollment.grade %}
+                                            {{ enrollment.grade }}
+                                        {% else %}
+                                            Not Assigned
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'update_grade' enrollment.id %}" class="btn btn-sm btn-primary">
+                                            Update Grade
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-warning mt-4">
+                        No students enrolled in this course.
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'course_management' %}" class="btn btn-secondary mt-3">Back to Courses</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

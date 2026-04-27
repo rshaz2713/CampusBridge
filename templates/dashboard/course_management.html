@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Course Management | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-4">My Courses</h1>
+
+                {% if courses %}
+                    <div class="row">
+                        {% for course in courses %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">{{ course.course_code }}</h5>
+                                        <p class="card-text">{{ course.course_name }}</p>
+                                        <p class="card-text"><strong>Semester:</strong> {{ course.semester }}</p>
+                                        <p class="card-text"><strong>Section:</strong> {{ course.section }}</p>
+                                        <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">
+                                            View Students
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        No courses assigned yet.
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

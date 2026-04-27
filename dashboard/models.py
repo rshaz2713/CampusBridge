@@ -12,7 +12,6 @@ class StudentRecord(models.Model):
     )
     student_id = models.IntegerField(unique=True)
     full_name = models.CharField(max_length=100)
-
     email = models.EmailField(blank=True, default="")
 
     def __str__(self):
@@ -30,25 +29,10 @@ class ProfessorRecord(models.Model):
 
     professor_id = models.IntegerField(unique=True)
     full_name = models.CharField(max_length=100)
-
     email = models.EmailField(blank=True, default="")
 
     def __str__(self):
         return f"{self.full_name} ({self.professor_id})"
-
-# Course table
-class Course(models.Model):
-    course_code = models.CharField(max_length=20)
-    course_name = models.CharField(max_length=100)
-
-    professor = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="courses_taught"
-    )
-
-    def __str__(self):
-        return f"{self.course_code} - {self.course_name}"
     
 # Professor Announcement Table
 class Announcement(models.Model):
@@ -68,3 +52,45 @@ class AnnouncementRead(models.Model):
 
     class Meta:
         unique_together = ('user', 'announcement')
+
+# This will create the course table
+class Course(models.Model):
+    course_code = models.CharField(max_length=20)
+    course_name = models.CharField(max_length=100)
+    semester = models.CharField(max_length=50, blank=True, default="")
+    section = models.CharField(max_length=10)
+    professor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="courses_taught"
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["course_code", "semester", "section"], name="unique_course_offering"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.course_code} - {self.course_name} ({self.semester}, Section {self.section})"
+
+
+class Enrollment(models.Model):
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="enrollments"
+    )
+    student = models.ForeignKey(
+        StudentRecord,
+        on_delete=models.CASCADE,
+        related_name="enrollments"
+    )
+    grade = models.CharField(max_length=10, blank=True, default="")
+
+    class Meta:
+        unique_together = ("course", "student")
+
+    def __str__(self):
+        return f"{self.student.full_name} - {self.course.course_code}"
