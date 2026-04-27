@@ -26,6 +26,15 @@ RESOURCE_INFO = {
         'btn_class': 'btn-warning',
         'roles': ['student'],
     },
+    'course-registration': {
+        'title': 'Register for Classes',
+        'url': '/dashboard/available-courses/',
+        'description': 'View available courses and enroll in classes.',
+        'icon': 'fas fa-book',
+        'button': 'Register',
+        'btn_class': 'btn-info',
+        'roles': ['student'],
+    },
     'search-student': {
         'title': 'Search Student',
         'url': '/dashboard/search-student/',
