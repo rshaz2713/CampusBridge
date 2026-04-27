@@ -10,11 +10,27 @@
 **UNLIKE** the Ellucian CentralPipeline,<br>
 **OUR PRODUCT** prioritizes usability, minimal navigation friction, and system reliability.<br>
 
-## Project Setup
+## 1. Project Structure
+
+Directory Overview:
+* `config/` - Global Django configuration
+* `core/` - Django app for landing page and general site pages that are shared
+* `dashboard/` - Django app for authenticated dashboard views
+* `templates/` - HTML templates rendered by views
+* `static/` - Static CSS and JS files
+
+Authentication:
+* CampusBridge uses Django's built-in authentication framework (django.contrib.auth). This proivdes login, logout, session management, and password validation for us.
+* Django provides URL routes `/accounts/login/` and `/accounts/logout/` for login and logout.
+* Views requiring login are protected by Django's `@login_required` decorator, automatically redirecting the user to login.
+* Each login session lasts 60 seconds, extendable by clicking the pop up button at the bottom, refreshing the page, or clicking a link. Upon expiry, you will have to login again.
+
+## 2. Project Setup
+
+### 2a. Setting up the System
 
 **Note that Python 3.13.5 was used to create the Django project. Please install it or any similar version.**
 
-To setup the project:
 1. Clone repository to your local machine
 2. Verify Python is installed
 3. Run the following:
@@ -22,6 +38,7 @@ To setup the project:
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
@@ -33,20 +50,36 @@ python manage.py runserver
 
 *Note that once you have completed project setup, you can run the project anytime by sourcing the venv and using* `python manage.py runserver`.
 
-## Project Structure
+### 2b. Setting up Basic CampusBridge Features
 
-Directory Overview:
-* `config/` - Global Django configuration
-* `core/` - Django app for landing page and general site pages that are shared
-* `dashboard/` - Django app for authenticated dashboard views
-* `templates/` - HTML templates rendered by views
+CampusBridge as a prototype supports basic registration, grade input, and degree audits for courses. In this prototype, a professor who is a department chair will have to be assigned as a superuser, and any preliminary course info will be configured in the Django admin. In a future iteration, a university admin/registrar role can be added in CampusBridge to handle this. For now, follow these steps:
 
-Authentication:
-* CampusBridge uses Django's built-in authentication framework (django.contrib.auth). This proivdes login, logout, session management, and password validation for us.
-* Django provides URL routes `/accounts/login/` and `/accounts/logout/` for login and logout.
-* Views requiring login are protected by Django's `@login_required` decorator, automatically redirecting the user to login.
+1. Start the Django server. Go to CampusBridge and make a professor account
+3. Stop the Django server, and run `python manage.py shell`. You will now make this professor a superuser via the Python command line
+4. Run the following:
 
-## Adding a Page
+```
+from django.contrib.auth.models import User
+User.objects.all()
+user = User.objects.get(username = "user Name of the Depart Chair")
+user.is_staff = True
+user.is_superuser = True
+user.save()
+exit()
+```
+
+5. Start the Django server and login to the admin portal at `http://127.0.0.1:8000/admin` with this professor's credentials.
+6. In the list of tables for the Dashboard app, find the courses table and click "Add". Fill out the info and assign a professor(s) to it (this can be any professor account that is registered in CampusBridge). If you want to create multiple sections, repeat this process and assign a different number. This is an example Course input:
+```
+Course code: "CS 530"
+Course name: "Advanced Software Engineering"
+Semester: "Spring 2026"
+Section: "01"
+```
+
+7. Now when you log into CampusBridge as a professor, you can see your courses and the roster of students. If you login as a student, you can see available courses and enroll/withdraw.
+
+## 3. Adding a Page
 
 **FYI, you should not have to edit config files or settings. These steps should be sufficient.**
 
@@ -66,13 +99,7 @@ Authentication:
 
 4. Test by running the project as mentioned above.
 
-## Superusers
-
-For development purposes, you should create a superuser to access Django admin via `http://127.0.0.1:8000/admin` and to test login/logout features.
-
-In your venv, run `python manage.py createsuperuser` and set a dummy name, email, and password. This will be stored in your local database and will not be committed to GitHub.
-
-## Updating Database Models
+## 4. Updating Database Models
 
 If you are doing database work and change any models, you MUST run:
 ```
@@ -84,7 +111,7 @@ Any migration files that are created MUST be committed to GitHub so all team mem
 
 **Do not commit db.sqlite3 to GitHub.**
 
-## Git Practices
+## 5. Git Practices
 
 * No direct commits to `main`
 * Verify you have access to `.gitignore`
