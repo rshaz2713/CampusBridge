@@ -5,9 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from core.models import Profile
 from core.constants.resources import RESOURCE_INFO
-from models import StudentRecord, Announcement, AnnouncementRead, Course, Enrollment
+from .models import StudentRecord, Announcement, AnnouncementRead, Course, Enrollment
 from django.shortcuts import get_object_or_404
-from forms import GradeUpdateForm, AnnouncementForm
+from .forms import GradeUpdateForm, AnnouncementForm
 
 @login_required
 def dashboard_home(request):
