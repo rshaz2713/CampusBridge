@@ -12,6 +12,49 @@
                     <p><strong>Student Name:</strong> {{ record.full_name }}</p>
                     <p><strong>Student ID:</strong> {{ record.student_id }}</p>
                     <p><strong>Student Email:</strong> {{ record.email }}</p>
+
+                    <hr class="my-4">
+
+                    <h2 class="h4 mb-3">Enrolled Courses</h2>
+
+                    {% if enrollments %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Semester</th>
+                                    <th>Section</th>
+                                    <th>Professor</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enrollment in enrollments %}
+                                    <tr>
+                                        <td>
+                                            {{ enrollment.course.course_code }} - 
+                                            {{ enrollment.course.course_name }}
+                                        </td>
+                                        <td>{{ enrollment.course.semester }}</td>
+                                        <td>{{ enrollment.course.section }}</td>
+                                        <td>{{ enrollment.course.professor.get_full_name|default:enrollment.course.professor.username }}</td>
+                                        <td>
+                                            {% if enrollment.grade %}
+                                                {{ enrollment.grade }}
+                                            {% else %}
+                                                REG
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info">
+                            You are not currently enrolled in any courses.
+                        </div>
+                    {% endif %}
+
                 {% else %}
                     <div class="alert alert-warning">
                         No degree audit information found.

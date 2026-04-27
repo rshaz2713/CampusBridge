@@ -106,7 +106,15 @@ def announcement_detail_view(request, announcement_id):
 @login_required
 def degree_audit_view(request):
     record = StudentRecord.objects.filter(user=request.user).first()
-    return render(request, "dashboard/degree_audit.html", {"record": record})
+
+    enrollments = []
+    if record:
+        enrollments = record.enrollments.select_related("course", "course__professor").all()
+
+    return render(request, "dashboard/degree_audit.html", {
+        "record": record,
+        "enrollments": enrollments,
+    })
 
 @login_required
 def professor_search_view(request):
