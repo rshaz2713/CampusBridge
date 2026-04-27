@@ -46,7 +46,7 @@ RESOURCE_INFO = {
     },
     'course-management': {
         'title': 'Course Management',
-        'url': '/dashboard/resource-unavailable/course-management/', # TODO: Implement this
+        'url': '/dashboard/courses/',
         'description': 'Manage course materials and grading.',
         'icon': 'fas fa-book',
         'button': 'Open',
