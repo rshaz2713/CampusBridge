@@ -33,20 +33,6 @@ class ProfessorRecord(models.Model):
 
     def __str__(self):
         return f"{self.full_name} ({self.professor_id})"
-
-# Course table
-class Course(models.Model):
-    course_code = models.CharField(max_length=20)
-    course_name = models.CharField(max_length=100)
-
-    professor = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="courses_taught"
-    )
-
-    def __str__(self):
-        return f"{self.course_code} - {self.course_name}"
     
 # Professor Announcement Table
 class Announcement(models.Model):

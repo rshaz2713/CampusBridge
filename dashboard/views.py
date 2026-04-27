@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from core.models import Profile
 from core.constants.resources import RESOURCE_INFO
-from .models import StudentRecord, Announcement, AnnouncementRead, Announcement, AnnouncementRead, Course, Enrollment
+from .models import StudentRecord, Announcement, AnnouncementRead, Course, Enrollment
 from django.shortcuts import get_object_or_404
+from .forms import GradeUpdateForm
 
 @login_required
 def dashboard_home(request):
@@ -134,18 +135,6 @@ def resource_unavailable(request, resource_id):
     return render(request, "dashboard/resource_unavailable.html", {
         "resource_title": resource_title,
     })
-
-
-class GradeUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Enrollment
-        fields = ["grade"]
-        widgets = {
-            "grade": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Enter grade"
-            })
-        }
 
 @login_required
 def course_management_view(request):
