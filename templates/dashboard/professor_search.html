@@ -21,8 +21,8 @@
                 </div>
 
                 {% if all_students %}
-                    <div id="table-container">
-                        <table class="table table-bordered table-hover">
+                    <div id="table-container" class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -39,8 +39,8 @@
                                         <td>{{ student.email }}</td>
                                         <td>
                                             <a href="{% url 'professor_student_degree_audit' student.student_id %}"
-                                                class="btn btn-sm btn-outline-primary">
-                                                    View Degree Audit
+                                                class="btn btn-sm btn-outline-primary text-nowrap">
+                                                    Degree Audit
                                             </a>
                                         </td>
                                     </tr>
