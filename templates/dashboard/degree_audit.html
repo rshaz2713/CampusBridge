@@ -51,7 +51,11 @@
                         </table>
                     {% else %}
                         <div class="alert alert-info">
-                            You are not currently enrolled in any courses.
+                            {% if viewing_as_professor %}
+                                This student is currently not enrolled in any courses.
+                            {% else %}
+                                You are currently not enrolled in any courses.
+                            {% endif %}
                         </div>
                     {% endif %}
 
@@ -61,7 +65,11 @@
                     </div>
                 {% endif %}
 
-                <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+                {% if viewing_as_professor %}
+                    <a href="{% url 'professor_search' %}" class="btn btn-secondary mt-3">Back to Student Search</a>
+                {% else %}
+                    <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+                {% endif %}
             </div>
         </div>
     </div>

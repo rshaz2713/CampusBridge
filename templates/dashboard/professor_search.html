@@ -28,6 +28,7 @@
                                     <th>Name</th>
                                     <th>Student ID</th>
                                     <th>Email</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="student-table-body">
@@ -36,6 +37,12 @@
                                         <td>{{ student.full_name }}</td>
                                         <td>{{ student.student_id }}</td>
                                         <td>{{ student.email }}</td>
+                                        <td>
+                                            <a href="{% url 'professor_student_degree_audit' student.student_id %}"
+                                                class="btn btn-sm btn-outline-primary">
+                                                    View Degree Audit
+                                            </a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

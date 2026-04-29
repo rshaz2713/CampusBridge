@@ -258,3 +258,18 @@ def withdraw_registered_course(request, course_id):
         messages.warning(request, f"You are not enrolled in {course.course_code}.")
 
     return redirect("available_courses")
+
+@login_required
+def professor_student_degree_audit_view(request, student_id):
+    if request.user.profile.role != "professor":
+        return render(request, "dashboard/access_denied.html")
+    
+    record = get_object_or_404(StudentRecord, student_id=student_id)
+
+    enrollments = (record.enrollments.select_related("course", "course__professor").all())
+
+    return render(request, "dashboard/degree_audit.html", {
+        "record": record,
+        "enrollments": enrollments,
+        "viewing_as_professor": True,
+    })
