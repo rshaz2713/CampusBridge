@@ -265,6 +265,7 @@ def professor_student_degree_audit_view(request, student_id):
         return render(request, "dashboard/access_denied.html")
     
     record = get_object_or_404(StudentRecord, student_id=student_id)
+    student_first_name = record.full_name.split()[0]
 
     enrollments = (record.enrollments.select_related("course", "course__professor").all())
 
@@ -272,4 +273,5 @@ def professor_student_degree_audit_view(request, student_id):
         "record": record,
         "enrollments": enrollments,
         "viewing_as_professor": True,
+        "student_first_name": student_first_name,
     })
