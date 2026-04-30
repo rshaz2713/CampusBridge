@@ -115,6 +115,8 @@ def student_financial_docs_view(request):
 
     total_credits = sum(enrollment.course.credit_hours for enrollment in enrollments)
 
+    # TODO: Do proper billing with full time and part time tuition, registration fee, etc.
+    
     tuition_rate_per_credit = 650
     estimated_tuition = total_credits * tuition_rate_per_credit
 
