@@ -37,8 +37,8 @@ RESOURCE_INFO = {
     },
     'announcements': {
         'title': 'Announcements',
-        'url': '/dashboard/create-announcement/',
-        'description': 'Create announcements for students.',
+        'url': '/dashboard/announcements/',
+        'description': 'View and manage announcements.',
         'icon': 'fas fa-bullhorn',
         'button': 'View',
         'btn_class': 'btn-warning',

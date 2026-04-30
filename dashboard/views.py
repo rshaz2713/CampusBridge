@@ -69,8 +69,31 @@ def create_announcement_view(request):
 
 @login_required
 def announcement_list_view(request):
-    announcements = Announcement.objects.all().order_by("-created_at")
-    return render(request, "dashboard/professor_announcement.html", {"announcements": announcements})
+    role = request.user.profile.role
+
+    if request.method == "POST":
+        if role != "professor":
+            return render(request, "dashboard/access_denied.html")
+
+        form = AnnouncementForm(request.POST)
+        if form.is_valid():
+            announcement = form.save(commit=False)
+            announcement.professor = request.user
+            announcement.save()
+            return redirect("professor_announcement")
+    else:
+        form = AnnouncementForm()
+
+    if role == "professor":
+        announcements = Announcement.objects.filter(professor=request.user).order_by("-created_at")
+    else:
+        announcements = Announcement.objects.all().order_by("-created_at")
+
+    return render(request, "dashboard/professor_announcement.html", {
+        "announcements": announcements,
+        "form": form,
+        "role": role,
+    })
 
 @login_required
 def announcement_detail_view(request, announcement_id):
@@ -86,6 +109,22 @@ def announcement_detail_view(request, announcement_id):
    return render(request, "dashboard/announcement_details.html", {
         "announcement": announcement
     })
+
+@login_required
+def delete_announcement_view(request, announcement_id):
+    if request.user.profile.role != "professor":
+        return render(request, "dashboard/access_denied.html")
+
+    announcement = get_object_or_404(
+        Announcement,
+        id=announcement_id,
+        professor=request.user
+    )
+
+    if request.method == "POST":
+        announcement.delete()
+
+    return redirect("professor_announcement")
 
 @login_required
 def degree_audit_view(request):
