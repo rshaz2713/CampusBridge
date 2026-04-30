@@ -102,6 +102,31 @@ def delete_announcement_view(request, announcement_id):
 
     return redirect("announcement_list")
 
+# Financial Docs
+
+@login_required
+def student_financial_docs_view(request):
+    student_record = StudentRecord.objects.filter(user=request.user).first()
+
+    if not student_record:
+        return render(request, "dashboard/access_denied.html")
+    
+    enrollments = Enrollment.objects.filter(student=student_record).select_related("course").order_by("course__course_code")
+
+    total_credits = sum(enrollment.course.credit_hours for enrollment in enrollments)
+
+    tuition_rate_per_credit = 650
+    estimated_tuition = total_credits * tuition_rate_per_credit
+
+    return render(request, "dashboard/student_financial_docs.html", {
+        "student_record": student_record,
+        "enrollments": enrollments,
+        "total_credits": total_credits,
+        "tuition_rate_per_credit": tuition_rate_per_credit,
+        "estimated_tuition": estimated_tuition,
+    })
+
+
 # Degree Audit and Student Search
 
 @login_required

@@ -10,7 +10,7 @@ RESOURCE_INFO = {
     },
     'financial-docs': {
         'title': 'Financial Documents',
-        'url': '/dashboard/resource-unavailable/financial-docs/', # TODO: Implement this
+        'url': '/dashboard/financial-docs/',
         'description': 'View tuition, aid packages, and tax documents.',
         'icon': 'fas fa-dollar-sign',
         'button': 'View',

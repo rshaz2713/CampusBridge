@@ -59,6 +59,7 @@ class Course(models.Model):
     course_name = models.CharField(max_length=100)
     semester = models.CharField(max_length=50, blank=True, default="")
     section = models.CharField(max_length=10)
+    credit_hours = models.PositiveSmallIntegerField(default=3)
     professor = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
