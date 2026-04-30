@@ -34,7 +34,7 @@ class ProfessorRecord(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.professor_id})"
     
-# Professor Announcement Table
+# Announcements
 class Announcement(models.Model):
     professor = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -53,7 +53,7 @@ class AnnouncementRead(models.Model):
     class Meta:
         unique_together = ('user', 'announcement')
 
-# This will create the course table
+# Course table
 class Course(models.Model):
     course_code = models.CharField(max_length=20)
     course_name = models.CharField(max_length=100)
@@ -75,7 +75,7 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.course_code} - {self.course_name} ({self.semester}, Section {self.section})"
 
-
+# Enrollment table
 class Enrollment(models.Model):
     course = models.ForeignKey(
         Course,
