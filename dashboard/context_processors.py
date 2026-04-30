@@ -1,7 +1,6 @@
 from core.models import Profile
 from .models import Announcement, AnnouncementRead
 
-
 def announcement_notifications(request):
     if not request.user.is_authenticated:
         return {

@@ -1,13 +1,14 @@
 from datetime import datetime
-from django import forms
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from core.models import Profile
+from django.shortcuts import get_object_or_404, redirect, render
+
 from core.constants.resources import RESOURCE_INFO
-from .models import StudentRecord, Announcement, AnnouncementRead, Course, Enrollment
-from django.shortcuts import get_object_or_404
-from .forms import GradeUpdateForm, AnnouncementForm
+from .forms import AnnouncementForm, GradeUpdateForm
+from .models import Announcement, AnnouncementRead, Course, Enrollment, StudentRecord
+
+# Dashboard home
 
 @login_required
 def dashboard_home(request):
@@ -21,11 +22,6 @@ def dashboard_home(request):
         greeting = "Good Afternoon"
     else:
         greeting = "Good Evening"
-
-    unread_announcements = Announcement.objects.exclude(
-        announcementread__user=request.user,
-        announcementread__is_read=True
-    )
 
     pinned_urls = list(
         profile.pinned_resources.values_list("resource_id", flat=True)
@@ -42,35 +38,38 @@ def dashboard_home(request):
         "greeting": greeting,
         "resources": resources,
         "pinned_urls": pinned_urls,
-        "announcements": unread_announcements,
+        # "announcements": unread_announcements,
     })
-        
-@login_required
-def create_announcement_view(request):
-    profile, created = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={"role": "student"}
-    )
 
-    if profile.role != "professor":
-        return render(request, "dashboard/access_denied.html")
+# Announcements
+
+@login_required
+def announcement_list_view(request):
+    role = request.user.profile.role
 
     if request.method == "POST":
+        if role != "professor":
+            return render(request, "dashboard/access_denied.html")
+
         form = AnnouncementForm(request.POST)
         if form.is_valid():
             announcement = form.save(commit=False)
             announcement.professor = request.user
             announcement.save()
-            return redirect("dashboard_home")
+            return redirect("announcement_list")
     else:
         form = AnnouncementForm()
 
-    return render(request, "dashboard/create_announcement.html", {"form": form})
+    if role == "professor":
+        announcements = Announcement.objects.filter(professor=request.user).order_by("-created_at")
+    else:
+        announcements = Announcement.objects.all().order_by("-created_at")
 
-@login_required
-def announcement_list_view(request):
-    announcements = Announcement.objects.all().order_by("-created_at")
-    return render(request, "dashboard/professor_announcement.html", {"announcements": announcements})
+    return render(request, "dashboard/announcement_list.html", {
+        "announcements": announcements,
+        "form": form,
+        "role": role,
+    })
 
 @login_required
 def announcement_detail_view(request, announcement_id):
@@ -88,6 +87,24 @@ def announcement_detail_view(request, announcement_id):
     })
 
 @login_required
+def delete_announcement_view(request, announcement_id):
+    if request.user.profile.role != "professor":
+        return render(request, "dashboard/access_denied.html")
+
+    announcement = get_object_or_404(
+        Announcement,
+        id=announcement_id,
+        professor=request.user
+    )
+
+    if request.method == "POST":
+        announcement.delete()
+
+    return redirect("announcement_list")
+
+# Degree Audit and Student Search
+
+@login_required
 def degree_audit_view(request):
     record = StudentRecord.objects.filter(user=request.user).first()
 
@@ -102,40 +119,34 @@ def degree_audit_view(request):
 
 @login_required
 def professor_search_view(request):
-    query = request.GET.get("q", "").strip()
     all_students = StudentRecord.objects.all().order_by("student_id")
-    search_results = StudentRecord.objects.none()
-
-    if query:
-        if query.isdigit():
-            search_results = StudentRecord.objects.filter(student_id=int(query))
-        else:
-            search_results = StudentRecord.objects.filter(full_name__icontains=query)
 
     return render(request, "dashboard/professor_search.html", {
-        "query": query,
-        "search_results": search_results,
         "all_students": all_students,
     })
 
 @login_required
-def resource_unavailable(request, resource_id):
-    resource = RESOURCE_INFO.get(resource_id)
+def professor_student_degree_audit_view(request, student_id):
+    if request.user.profile.role != "professor":
+        return render(request, "dashboard/access_denied.html")
+    
+    record = get_object_or_404(StudentRecord, student_id=student_id)
+    student_first_name = record.full_name.split()[0] if record.full_name else "Student"
 
-    resource_title = resource["title"] if resource else "This resource"
+    enrollments = (record.enrollments.select_related("course", "course__professor").all())
 
-    return render(request, "dashboard/resource_unavailable.html", {
-        "resource_title": resource_title,
+    return render(request, "dashboard/degree_audit.html", {
+        "record": record,
+        "enrollments": enrollments,
+        "viewing_as_professor": True,
+        "student_first_name": student_first_name,
     })
+
+# Course Management, Enrollment, and Grades
 
 @login_required
 def course_management_view(request):
-    profile, created = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={"role": "student"}
-    )
-
-    if profile.role != "professor":
+    if request.user.profile.role != "professor":
         return render(request, "dashboard/access_denied.html")
 
     courses = Course.objects.filter(professor=request.user).order_by("course_code")
@@ -147,14 +158,9 @@ def course_management_view(request):
 
 @login_required
 def course_detail_view(request, course_id):
-    profile, created = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={"role": "student"}
-    )
-
-    if profile.role != "professor":
+    if request.user.profile.role != "professor":
         return render(request, "dashboard/access_denied.html")
-
+    
     course = get_object_or_404(Course, id=course_id, professor=request.user)
     enrollments = Enrollment.objects.filter(course=course).select_related("student").order_by("student__full_name")
 
@@ -166,12 +172,7 @@ def course_detail_view(request, course_id):
 
 @login_required
 def update_grade_view(request, enrollment_id):
-    profile, created = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={"role": "student"}
-    )
-
-    if profile.role != "professor":
+    if request.user.profile.role != "professor":
         return render(request, "dashboard/access_denied.html")
 
     enrollment = get_object_or_404(
@@ -189,12 +190,8 @@ def update_grade_view(request, enrollment_id):
     else:
         form = GradeUpdateForm(instance=enrollment)
 
-    return render(request, "dashboard/update_grade.html", {
-        "form": form,
-        "enrollment": enrollment
-    })
+    return redirect("course_detail", course_id=enrollment.course.id)
 
-# This method will allow student to view the available courses for particular samester
 @login_required
 def available_courses_view(request):
     student_record = StudentRecord.objects.filter(user=request.user).first()
@@ -213,8 +210,7 @@ def available_courses_view(request):
         "enrolled_course_ids": enrolled_course_ids,
     })
 
-# This method will allow student to view the enrolled courses
-# If student is trying to enroll same course again it will give an error
+@login_required
 def enroll_course_view(request, course_id):
     student_record = StudentRecord.objects.filter(user=request.user).first()
 
@@ -236,7 +232,6 @@ def enroll_course_view(request, course_id):
 
     return redirect("available_courses")
 
-# This method will allows student to withdrow the registered classes 
 @login_required
 def withdraw_registered_course(request, course_id):
     student_record = StudentRecord.objects.filter(user=request.user).first()
@@ -258,3 +253,15 @@ def withdraw_registered_course(request, course_id):
         messages.warning(request, f"You are not enrolled in {course.course_code}.")
 
     return redirect("available_courses")
+
+# Resource fallback
+
+@login_required
+def resource_unavailable(request, resource_id):
+    resource = RESOURCE_INFO.get(resource_id)
+
+    resource_title = resource["title"] if resource else "This resource"
+
+    return render(request, "dashboard/resource_unavailable.html", {
+        "resource_title": resource_title,
+    })
