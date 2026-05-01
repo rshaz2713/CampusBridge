@@ -9,16 +9,15 @@
             <div class="card-body">
                 <h1 class="mb-4">Student Finances</h1>
 
-                <h2 class="h4 mt-4">Tuition and Fees</h2>
+                <h2 class="h4 mt-4">Estimated Balance Due: ${{ estimated_balance }}</h2>
 
                 {% if enrollments %}
                     {% if total_credits < 12 %}
                         <div class="border rounded p-3 mt-3">
                             <p class="mb-2"><strong>Total Enrolled Credits:</strong> {{ total_credits }}</p>
-                            <p class="mb-2"><strong>Tuition Rate:</strong> ${{ tuition_rate_per_credit }} per credit</p>
+                            <p class="mb-2"><strong>Part Time Tuition Rate:</strong> ${{ tuition_rate_per_credit }} per credit</p>
                             <p class="mb-2"><strong>Registration Fee:</strong> ${{ registration_fee }}</p>
                             <p class="mb-2"><strong>Transportation Fee:</strong> ${{ transportation_fee }}</p>
-                            <p class="mb-1"><strong>Estimated Balance Due:</strong> ${{ estimated_balance }}</p>
                         </div>
                     {% else %}
                         <div class="border rounded p-3 mt-3">
@@ -27,11 +26,10 @@
                             <p class="mb-2"><strong>General Fee:</strong> ${{ general_fee }}</p>
                             <p class="mb-2"><strong>State University Fee:</strong> ${{ state_univ_fee }}</p>
                             <p class="mb-2"><strong>Student Activity Fee:</strong> ${{ student_activity_fee }}</p>
-                            <p class="mb-2"><strong>Transportation Fee:</strong> ${{ transportation_fee }}</p>
                             {% if excess_credit_fee > 0 %}
                                 <p class="mb-2"><strong>Excess Credit Fee:</strong> ${{ excess_credit_fee }}</p>
                             {% endif %}
-                            <p class="mb-0"><strong>Estimated Balance Due:</strong> ${{ estimated_balance }}</p>
+                            <p class="mb-0"><strong>Transportation Fee:</strong> ${{ transportation_fee }}</p>
                         </div>
                     {% endif %}
                 {% else %}

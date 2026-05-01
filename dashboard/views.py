@@ -125,13 +125,16 @@ def student_financial_docs_view(request):
     student_activity_fee = 100
     excess_credit_fee = 0
 
-    if (total_credits < 12):    
-        estimated_balance = (total_credits * tuition_rate_per_credit) + registration_fee + transportation_fee
+    if not total_credits == 0:
+        if (total_credits < 12):    
+            estimated_balance = (total_credits * tuition_rate_per_credit) + registration_fee + transportation_fee
+        else:
+            if (total_credits > 18):
+                excess_credit_fee = ((total_credits - 18) * tuition_rate_per_credit)
+            estimated_balance = full_time_tuition + general_fee + state_univ_fee + student_activity_fee + transportation_fee + excess_credit_fee
     else:
-        if (total_credits > 18):
-            excess_credit_fee = ((total_credits - 18) * tuition_rate_per_credit)
-        estimated_balance = full_time_tuition + general_fee + state_univ_fee + student_activity_fee + transportation_fee + excess_credit_fee
-    
+        estimated_balance = 0
+
     return render(request, "dashboard/student_financial_docs.html", {
         "student_record": student_record,
         "enrollments": enrollments,
