@@ -102,6 +102,55 @@ def delete_announcement_view(request, announcement_id):
 
     return redirect("announcement_list")
 
+# Financial Docs
+
+@login_required
+def student_financial_docs_view(request):
+    student_record = StudentRecord.objects.filter(user=request.user).first()
+
+    if not student_record:
+        return render(request, "dashboard/access_denied.html")
+    
+    enrollments = Enrollment.objects.filter(student=student_record).select_related("course").order_by("course__course_code")
+
+    total_credits = sum(enrollment.course.credit_hours for enrollment in enrollments)
+
+    # Fees, can be changed as desired
+    tuition_rate_per_credit = 650
+    registration_fee = 58
+    transportation_fee = 50
+    full_time_tuition = 3499
+    general_fee = 2358
+    state_univ_fee = 528
+    student_activity_fee = 100
+    excess_credit_fee = 0
+
+    if not total_credits == 0:
+        if (total_credits < 12):    
+            estimated_balance = (total_credits * tuition_rate_per_credit) + registration_fee + transportation_fee
+        else:
+            if (total_credits > 18):
+                excess_credit_fee = ((total_credits - 18) * tuition_rate_per_credit)
+            estimated_balance = full_time_tuition + general_fee + state_univ_fee + student_activity_fee + transportation_fee + excess_credit_fee
+    else:
+        estimated_balance = 0
+
+    return render(request, "dashboard/student_financial_docs.html", {
+        "student_record": student_record,
+        "enrollments": enrollments,
+        "total_credits": total_credits,
+        "tuition_rate_per_credit": tuition_rate_per_credit,
+        "registration_fee": registration_fee,
+        "transportation_fee": transportation_fee,
+        "full_time_tuition": full_time_tuition,
+        "general_fee": general_fee,
+        "state_univ_fee": state_univ_fee,
+        "student_activity_fee": student_activity_fee,
+        "excess_credit_fee": excess_credit_fee,
+        "estimated_balance": estimated_balance,
+    })
+
+
 # Degree Audit and Student Search
 
 @login_required
