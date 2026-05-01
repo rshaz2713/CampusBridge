@@ -9,7 +9,7 @@ RESOURCE_INFO = {
         'roles': ['student'],
     },
     'financial-docs': {
-        'title': 'Financial Documents',
+        'title': 'Student Finances',
         'url': '/dashboard/financial-docs/',
         'description': 'View tuition, aid packages, and tax documents.',
         'icon': 'fas fa-dollar-sign',
