@@ -53,6 +53,15 @@ RESOURCE_INFO = {
         'btn_class': 'btn-success',
         'roles': ['professor'],
     },
+    'employee-financial-docs': {
+        'title': 'Employee Finances',
+        'url': '/dashboard/employee-financial-docs/',
+        'description': 'Access W-2 and pay statements.',
+        'icon': 'fas fa-file-invoice-dollar',
+        'button': 'View',
+        'btn_class': 'btn-warning',
+        'roles': ['professor'],
+    },
     'wellness': {
         'title': 'Wellness Services',
         'url': 'https://www.ccsu.edu/student-wellness-services',

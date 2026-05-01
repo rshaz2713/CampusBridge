@@ -150,6 +150,27 @@ def student_financial_docs_view(request):
         "estimated_balance": estimated_balance,
     })
 
+@login_required
+def employee_financial_docs_view(request):
+    if request.user.profile.role != "professor":
+        return render(request, "dashboard/access_denied.html")
+    
+    employee_name = request.user.get_full_name() or request.user.username
+    employee_email = request.user.email
+
+    pay_period = "Current Pay Period"
+    timesheet_status = "Not submitted"
+    latest_pay_statement = "Not available"
+    w2_status = "Not available"
+
+    return render(request, "dashboard/employee_financial_docs.html", {
+        "employee_name": employee_name,
+        "employee_email": employee_email,
+        "timesheet_status": timesheet_status,
+        "pay_period": pay_period,
+        "latest_pay_statement": latest_pay_statement,
+        "w2_status": w2_status,
+    })
 
 # Degree Audit and Student Search
 

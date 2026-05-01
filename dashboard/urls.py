@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (dashboard_home, degree_audit_view, professor_search_view, professor_student_degree_audit_view, student_financial_docs_view,
-                    announcement_list_view, announcement_detail_view, delete_announcement_view,
+                    employee_financial_docs_view, announcement_list_view, announcement_detail_view, delete_announcement_view,
                     course_management_view, course_detail_view, update_grade_view, available_courses_view, enroll_course_view, withdraw_registered_course,
                     resource_unavailable)
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path("search-student/", professor_search_view, name="professor_search"),
     path("student/<int:student_id>/degree-audit/", professor_student_degree_audit_view, name="professor_student_degree_audit"),
     path("financial-docs/", student_financial_docs_view, name="student_financial_docs"),
+    path("employee-financial-docs/", employee_financial_docs_view, name="employee_financial_docs"),
 
     path("announcements/", announcement_list_view, name="announcement_list"),
     path("announcements/<int:announcement_id>/", announcement_detail_view, name="announcement_details"),
