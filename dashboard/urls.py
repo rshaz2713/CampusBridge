@@ -1,4 +1,5 @@
 from django.urls import path
+from.import views
 from .views import (dashboard_home, degree_audit_view, professor_search_view, professor_student_degree_audit_view, student_financial_docs_view,
                     employee_financial_docs_view, announcement_list_view, announcement_detail_view, delete_announcement_view,
                     course_management_view, course_detail_view, update_grade_view, available_courses_view, enroll_course_view, withdraw_registered_course,
@@ -25,4 +26,5 @@ urlpatterns = [
     path("withdraw-course/<int:course_id>/", withdraw_registered_course, name="withdraw_course"),
 
     path("resource-unavailable/<str:resource_id>/", resource_unavailable, name="resource_unavailable"),
+    path("switch-institution/", views.switch_institution_view, name="switch_institution"),
 ]

@@ -18,7 +18,45 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-primary border-bottom border-body fixed-top" data-bs-theme="dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">CampusBridge</a>
+        <a class="navbar-brand" href="{% url 'home' %}">
+    CampusBridge
+    {% if current_institution %}
+        <span class="badge bg-light text-dark ms-2">
+            {{ current_institution }}
+        </span>
+    {% endif %}
+</a>
+<div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">
+        CampusBridge
+        {% if current_institution %}
+            <span class="badge bg-light text-dark ms-2">
+                {{ current_institution }}
+            </span>
+        {% endif %}
+    </a>
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'switch_institution' %}" class="d-flex align-items-center ms-3">
+            {% csrf_token %}
+
+            <label for="institution-switcher" class="text-white me-2 mb-0">
+                Pipeline:
+            </label>
+
+            <select id="institution-switcher"
+                    name="institution"
+                    class="form-select form-select-sm"
+                    onchange="this.form.submit()">
+                {% for institution in institution_options %}
+                    <option value="{{ institution }}"
+                        {% if institution == current_institution %}selected{% endif %}>
+                        {{ institution }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    {% endif %}
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

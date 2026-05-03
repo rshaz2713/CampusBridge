@@ -335,3 +335,18 @@ def resource_unavailable(request, resource_id):
     return render(request, "dashboard/resource_unavailable.html", {
         "resource_title": resource_title,
     })
+
+@login_required
+def switch_institution_view(request):
+    if request.method == "POST":
+        institution = request.POST.get("institution")
+
+        allowed_institutions = ["CCSU", "UConn", "Tunxis"]
+
+        if institution in allowed_institutions:
+            request.session["institution"] = institution
+            messages.success(request, f"Switched to {institution} pipeline.")
+        else:
+            messages.error(request, "Invalid institution selected.")
+
+    return redirect(request.META.get("HTTP_REFERER", "dashboard_home"))
