@@ -9,8 +9,8 @@ RESOURCE_INFO = {
         'roles': ['student'],
     },
     'financial-docs': {
-        'title': 'Financial Documents',
-        'url': '/dashboard/resource-unavailable/financial-docs/', # TODO: Implement this
+        'title': 'Student Finances',
+        'url': '/dashboard/financial-docs/',
         'description': 'View tuition, aid packages, and tax documents.',
         'icon': 'fas fa-dollar-sign',
         'button': 'View',
@@ -51,6 +51,15 @@ RESOURCE_INFO = {
         'icon': 'fas fa-book',
         'button': 'Manage',
         'btn_class': 'btn-success',
+        'roles': ['professor'],
+    },
+    'employee-financial-docs': {
+        'title': 'Employee Finances',
+        'url': '/dashboard/employee-financial-docs/',
+        'description': 'Access W-2 and pay statements.',
+        'icon': 'fas fa-file-invoice-dollar',
+        'button': 'View',
+        'btn_class': 'btn-warning',
         'roles': ['professor'],
     },
     'wellness': {
