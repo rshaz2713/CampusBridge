@@ -8,9 +8,14 @@
     <div class="row align-items-center">
         <div class="col-lg-7 col-sm-10 col-12">
             {% if user.is_authenticated %}
-                <h1 class="display-3 text-sm-start text-center">Hello, {{ user.first_name }}!</h1>
-                <p class="lead text-sm-start text-center">Welcome back to CampusBridge.</p>
-                <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg d-sm-inline-block d-block">Go to Dashboard</a>
+                {% if user.is_superuser %}
+                    <h1 class="display-3 text-sm-start text-center">Hello, Admin!</h1>
+                    <p class="lead text-sm-start text-center">To make modifications to the CampusBridge backend database, visit <a href="http://localhost:8000/admin">http://localhost:8000/admin</a>.</p>
+                {% else %}
+                    <h1 class="display-3 text-sm-start text-center">Hello, {{ user.first_name }}!</h1>
+                    <p class="lead text-sm-start text-center">Welcome back to CampusBridge.</p>
+                    <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg d-sm-inline-block d-block">Go to Dashboard</a>
+                {% endif %}
             {% else %}
                 <h1 class="display-3 text-sm-start text-center">Welcome to CampusBridge</h1>
                 <p class="lead text-sm-start text-center">This portal centralizes academic and campus resources in one place.</p>

@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.exceptions import ValidationError
 
-from core.models import Institution
+from core.models import Institution, InstitutionMembership
 
 
 class StudentRecord(models.Model):
@@ -87,6 +88,19 @@ class Course(models.Model):
                 name="unique_course_offering_per_institution",
             )
         ]
+
+    def clean(self):
+        if self.institution_id and self.professor_id:
+            is_valid_professor = InstitutionMembership.objects.filter(
+                user=self.professor,
+                institution=self.institution,
+                role=InstitutionMembership.PROFESSOR,
+            ).exists()
+
+            if not is_valid_professor:
+                raise ValidationError({
+                    "professor": "Selected professor must be a professor at this institution."
+                })
 
     def __str__(self):
         return f"{self.institution.code} - {self.course_code} - {self.course_name} ({self.semester}, Section {self.section})"

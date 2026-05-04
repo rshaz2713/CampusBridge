@@ -16,7 +16,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg bg-primary border-bottom border-body fixed-top" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg border-bottom border-body fixed-top" data-bs-theme="dark" style="background-color: {% if user.is_superuser %}black{% else %}{{ current_institution.primary_color|default:'#0d6efd' }}{% endif %};">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
             <span>CampusBridge</span>
@@ -60,19 +60,21 @@
                 {% if user.is_authenticated %}
 
                     <li class="nav-item dropdown me-3">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="position-relative d-inline-flex align-items-center justify-content-center"
-                                  style="width: 20px; height: 20px;">
-                                <i class="fas fa-bell"></i>
+                        {% if not user.is_superuser %}
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="position-relative d-inline-flex align-items-center justify-content-center"
+                                    style="width: 20px; height: 20px;">
+                                    <i class="fas fa-bell"></i>
 
-                                {% if role == "student" and unread_announcements %}
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ unread_announcements|length }}
-                                    </span>
-                                {% endif %}
-                            </span>
-                        </a>
+                                    {% if role == "student" and unread_announcements %}
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            {{ unread_announcements|length }}
+                                        </span>
+                                    {% endif %}
+                                </span>
+                            </a>
+                        {% endif %}
 
                         <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px;">
                             <li class="dropdown-header">
@@ -115,8 +117,10 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'dashboard_home' %}">Dashboard</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            {% if not user.is_superuser %}
+                                <li><a class="dropdown-item" href="{% url 'dashboard_home' %}">Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            {% endif %}
                             <li>
                                 <form action="{% url 'logout' %}" method="post" class="px-3">
                                     {% csrf_token %}
