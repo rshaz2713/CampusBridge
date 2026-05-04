@@ -12,7 +12,7 @@ class SuperuserRedirectMiddleware:
         if request.user.is_authenticated and request.user.is_superuser:
             if not (
                 request.path == "/" or
-                request.path.startswith("/admin/") or
+                request.path.startswith("/admin") or
                 request.path == logout_url
             ):
                 return redirect("/")
