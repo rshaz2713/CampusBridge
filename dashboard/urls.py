@@ -26,5 +26,5 @@ urlpatterns = [
     path("withdraw-course/<int:course_id>/", withdraw_registered_course, name="withdraw_course"),
 
     path("resource-unavailable/<str:resource_id>/", resource_unavailable, name="resource_unavailable"),
-    path("switch-institution/", views.switch_institution_view, name="switch_institution"),
+    path("switch-institution/", views.switch_institution, name="switch_institution"),
 ]

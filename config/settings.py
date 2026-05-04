@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.session_timeout_info',
                 'dashboard.context_processors.announcement_notifications',
+                'dashboard.context_processors.institution_context',
             ],
         },
     },

@@ -18,45 +18,15 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-primary border-bottom border-body fixed-top" data-bs-theme="dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">
-    CampusBridge
-    {% if current_institution %}
-        <span class="badge bg-light text-dark ms-2">
-            {{ current_institution }}
-        </span>
-    {% endif %}
-</a>
-<div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">
-        CampusBridge
-        {% if current_institution %}
-            <span class="badge bg-light text-dark ms-2">
-                {{ current_institution }}
-            </span>
-        {% endif %}
-    </a>
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+            <span>CampusBridge</span>
 
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'switch_institution' %}" class="d-flex align-items-center ms-3">
-            {% csrf_token %}
-
-            <label for="institution-switcher" class="text-white me-2 mb-0">
-                Pipeline:
-            </label>
-
-            <select id="institution-switcher"
-                    name="institution"
-                    class="form-select form-select-sm"
-                    onchange="this.form.submit()">
-                {% for institution in institution_options %}
-                    <option value="{{ institution }}"
-                        {% if institution == current_institution %}selected{% endif %}>
-                        {{ institution }}
-                    </option>
-                {% endfor %}
-            </select>
-        </form>
-    {% endif %}
+            {% if current_institution %}
+                <span class="badge bg-light text-dark ms-2">
+                    {{ current_institution.name }}
+                </span>
+            {% endif %}
+        </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,12 +34,36 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if user.is_authenticated and institution_options %}
+                <form method="post" action="{% url 'switch_institution' %}" class="d-flex align-items-center ms-lg-3 my-2 my-lg-0">
+                    {% csrf_token %}
+
+                    <label for="institution-switcher" class="text-white me-2 mb-0">
+                        Pipeline:
+                    </label>
+
+                    <select id="institution-switcher"
+                            name="membership_id"
+                            class="form-select form-select-sm"
+                            onchange="this.form.submit()">
+                        {% for membership in institution_options %}
+                            <option value="{{ membership.id }}"
+                                {% if current_membership and membership.id == current_membership.id %}selected{% endif %}>
+                                {{ membership.institution.name }} - {{ membership.get_role_display }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            {% endif %}
+
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
 
                     <li class="nav-item dropdown me-3">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="position-relative d-inline-flex align-items-center justify-content-center" style="width: 20px; height: 20px;">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="position-relative d-inline-flex align-items-center justify-content-center"
+                                  style="width: 20px; height: 20px;">
                                 <i class="fas fa-bell"></i>
 
                                 {% if role == "student" and unread_announcements %}
@@ -81,7 +75,13 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px;">
-                            <li class="dropdown-header">Notifications</li>
+                            <li class="dropdown-header">
+                                {% if current_institution %}
+                                    {{ current_institution.name }} Notifications
+                                {% else %}
+                                    Notifications
+                                {% endif %}
+                            </li>
 
                             {% if role == "student" and unread_announcements %}
                                 {% for item in unread_announcements %}
@@ -109,27 +109,40 @@
                         <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#"
                            role="button" aria-expanded="false">
                             {{ user.username }}
+                            {% if role %}
+                                <span class="text-white-50 ms-1">({{ role|title }})</span>
+                            {% endif %}
                         </a>
+
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{% url 'dashboard_home' %}">Dashboard</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="{% url 'logout' %}" method="post" class="px-3">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-link dropdown-item p-0 text-start">Logout</button>
+                                    <button type="submit" class="btn btn-link dropdown-item p-0 text-start">
+                                        Logout
+                                    </button>
                                 </form>
                             </li>
                         </ul>
                     </li>
+
                 {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container my-5">
+<div class="container my-5 pt-4">
     {% if user.is_authenticated and session_seconds_remaining %}
-        <div id="session-banner-shell" class="session-banner-shell alert alert-warning" role="alert" data-seconds-remaining="{{ session_seconds_remaining }}" data-extend-url="{% url 'extend_session' %}" data-expire-url="{% url 'expire_session' %}" data-login-url="{% url 'login' %}?next={{ request.path }}">
+        <div id="session-banner-shell"
+             class="session-banner-shell alert alert-warning"
+             role="alert"
+             data-seconds-remaining="{{ session_seconds_remaining }}"
+             data-extend-url="{% url 'extend_session' %}"
+             data-expire-url="{% url 'expire_session' %}"
+             data-login-url="{% url 'login' %}?next={{ request.path }}">
             <div class="container py-2">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
@@ -143,7 +156,9 @@
                                 <button id="extend-session-btn" type="button" class="btn btn-sm btn-outline-dark">
                                     Extend Session
                                 </button>
-                                <a id="relogin-btn" href="{% url 'login' %}?next={{ request.path }}" class="btn btn-sm btn-danger d-none">
+                                <a id="relogin-btn"
+                                   href="{% url 'login' %}?next={{ request.path }}"
+                                   class="btn btn-sm btn-danger d-none">
                                     Login Again
                                 </a>
                             </div>
