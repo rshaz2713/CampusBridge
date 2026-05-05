@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Degree Audit | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-4">{% if viewing_as_professor %} {{ student_first_name }}'s {% endif %}Degree Audit</h1>
+                {% if record %}
+                    <p><strong>Student Name:</strong> {{ record.full_name }}</p>
+                    <p><strong>Student ID:</strong> {{ record.student_id }}</p>
+                    <p><strong>Student Email:</strong> {{ record.email }}</p>
+
+                    <hr class="my-4">
+
+                    <h2 class="h4 mb-3">Enrolled Courses</h2>
+
+                    {% if enrollments %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Semester</th>
+                                    <th>Section</th>
+                                    <th>Professor</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enrollment in enrollments %}
+                                    <tr>
+                                        <td>
+                                            {{ enrollment.course.course_code }} - 
+                                            {{ enrollment.course.course_name }}
+                                        </td>
+                                        <td>{{ enrollment.course.semester }}</td>
+                                        <td>{{ enrollment.course.section }}</td>
+                                        <td>{{ enrollment.course.professor.get_full_name|default:enrollment.course.professor.username }}</td>
+                                        <td>
+                                            {% if enrollment.grade %}
+                                                {{ enrollment.grade }}
+                                            {% else %}
+                                                REG
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info">
+                            {% if viewing_as_professor %}
+                                This student is currently not enrolled in any courses.
+                            {% else %}
+                                You are currently not enrolled in any courses.
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <div class="alert alert-warning">
+                        No degree audit information found.
+                    </div>
+                {% endif %}
+
+                {% if viewing_as_professor %}
+                    <a href="{% url 'professor_search' %}" class="btn btn-secondary mt-3">Back to Student Search</a>
+                {% else %}
+                    <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

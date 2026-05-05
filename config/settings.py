@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.SuperuserRedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -64,6 +65,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.session_timeout_info',
+                'dashboard.context_processors.announcement_notifications',
+                'dashboard.context_processors.institution_context',
             ],
         },
     },
@@ -130,3 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Predictable timeout
+SESSION_COOKIE_AGE = 60 # Adjustable, this is in seconds
+SESSION_SAVE_EVERY_REQUEST = True

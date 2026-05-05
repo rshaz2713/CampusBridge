@@ -6,16 +6,22 @@
 {% block content %}
 <section class="container p-5 shadow my-5 bg-body rounded">
     <div class="row align-items-center">
-        <div class="col-lg-7">
+        <div class="col-lg-7 col-sm-10 col-12">
             {% if user.is_authenticated %}
-                <h1 class="display-3 text-sm-start text-center">Hello, {{ user.username }}!</h1>
-                <p class="lead">Welcome back to CampusBridge.</p>
-                <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg mt-3">Go to Dashboard</a>
+                {% if user.is_superuser %}
+                    <h1 class="display-3 text-sm-start text-center">Hello, Admin!</h1>
+                    <p class="lead text-sm-start text-center">To make modifications to the CampusBridge backend database, visit <a href="http://localhost:8000/admin">http://localhost:8000/admin</a>.</p>
+                {% else %}
+                    <h1 class="display-3 text-sm-start text-center">Hello, {{ user.first_name }}!</h1>
+                    <p class="lead text-sm-start text-center">Welcome back to CampusBridge.</p>
+                    <a href="{% url 'dashboard_home' %}" class="btn btn-primary btn-lg d-sm-inline-block d-block">Go to Dashboard</a>
+                {% endif %}
             {% else %}
                 <h1 class="display-3 text-sm-start text-center">Welcome to CampusBridge</h1>
-                <p class="lead">This portal centralizes academic and campus resources in one place.</p>
-                <p>Created by Team Robotastic: Rumman Shahzad, Raghubir Bhandari, Seth Wilfinger, Devak Chhita</p>
-                <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-3">Login</a>
+                <p class="lead text-sm-start text-center">This portal centralizes academic and campus resources in one place.</p>
+                <p class="text-sm-start text-center">Created by Team Robotastic: Rumman Shahzad, Raghubir Bhandari, Seth Wilfinger, Devak Chhita</p>
+                <p class="fst-italic">No need to thank us.™</p>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg d-sm-inline-block d-block">Login</a>
             {% endif %}
         </div>
     </div>

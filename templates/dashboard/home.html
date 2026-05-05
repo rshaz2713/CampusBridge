@@ -1,17 +1,100 @@
 {% extends "base.html" %}
 
-{% block title %}{{ user.username }}'s Dashboard | CampusBridge{% endblock %}
+{% block title %}{{ user.first_name }}'s Dashboard | CampusBridge{% endblock %}
 
 {% block content %}
+
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="card shadow p-4">
             <div class="card-body">
+
                 <h1 class="mb-3">Dashboard</h1>
-                <p class="lead">Welcome, {{ user.username }}</p>
-                <p>This is your CampusBridge dashboard.</p>
+                <p class="lead">
+                    {{ greeting }},
+                    {% if user.first_name %}
+                        {{ user.first_name }} {{ user.last_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                    ({{ role|title }})
+                </p>
+
+                {% if pinned_urls %}
+                    <h4 class="mt-4 mb-3">Pinned Resources</h4>
+
+                    <div class="row">
+                        {% for rid in pinned_urls %}
+                            {% for r in resources %}
+                                {% if r.id == rid %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100 shadow-sm text-center">
+                                            <div class="card-body">
+
+                                                <h5 class="card-title">
+                                                    <i class="{{ r.icon }}"></i> {{ r.title }}
+                                                </h5>
+
+                                                <p class="card-text">{{ r.description }}</p>
+
+                                                <a href="{{ r.url }}" class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
+                                                    {{ r.button }}
+                                                </a>
+
+                                                <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-sm-inline-block d-block">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                        <i class="fas fa-thumbtack"></i> Unpin
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <h4 class="mt-4 mb-3">
+                    {% if role == "student" %}Student Tools{% else %}Professor Tools{% endif %}
+                </h4>
+
+                <div class="row">
+                    {% for r in resources %}
+                        {% if r.id not in pinned_urls %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm text-center">
+                                    <div class="card-body">
+
+                                        <h5 class="card-title">
+                                            <i class="{{ r.icon }}"></i> {{ r.title }}
+                                        </h5>
+
+                                        <p class="card-text">{{ r.description }}</p>
+
+                                        <a href="{{ r.url }}" class="btn {{ r.btn_class }} mx-3 px-4 d-sm-inline-block d-block">
+                                            {{ r.button }}
+                                        </a>
+
+                                        <form method="post" action="{% url 'toggle_pin' r.id %}" class="mt-2 d-sm-inline-block d-block">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-thumbtack"></i> Pin
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

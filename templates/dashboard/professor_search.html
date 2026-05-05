@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search Student | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow p-4">
+            <div class="card-body">
+                <h1 class="mb-4">Search Student</h1>
+
+                <div class="mb-4">
+                    <input
+                        type="text"
+                        id="student-search"
+                        class="form-control"
+                        placeholder="Search by student name or ID"
+                        autocomplete="off"
+                    >
+                </div>
+
+                {% if all_students %}
+                    <div id="table-container" class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Student ID</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-table-body">
+                                {% for student in all_students %}
+                                    <tr data-search="{{ student.full_name|lower }} {{ student.student_id }}">
+                                        <td>{{ student.full_name }}</td>
+                                        <td>{{ student.student_id }}</td>
+                                        <td>{{ student.email }}</td>
+                                        <td>
+                                            <a href="{% url 'professor_student_degree_audit' student.student_id %}"
+                                                class="btn btn-sm btn-outline-primary text-nowrap">
+                                                    Degree Audit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="no-results-message" class="alert alert-warning d-none">
+                        No matching students found.
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        No student records available.
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-4">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/query_student.js' %}"></script>
+{% endblock %}

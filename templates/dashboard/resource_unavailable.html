@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Resource Unavailable | CampusBridge{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow p-4">
+            <div class="card-body text-center">
+                <h1 class="mb-3">Resource Unavailable</h1>
+                <p class="lead">
+                    {{ resource_title }} failed to load.
+                </p>
+                <p>
+                    This resource may still be under development or temporarily unavailable. Please try again later.
+                </p>
+                <a href="{% url 'dashboard_home' %}" class="btn btn-secondary mt-3">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

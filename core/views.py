@@ -1,33 +1,9 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django import forms
-
-
-class CampusBridgeRegisterForm(UserCreationForm):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={
-            "class": "form-control custom-input",
-            "placeholder": "Enter username"
-        })
-    )
-    password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control custom-input",
-            "placeholder": "Enter password"
-        })
-    )
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control custom-input",
-            "placeholder": "Confirm password"
-        })
-    )
-
+from .forms.registration_form import CampusBridgeRegisterForm
 
 def home(request):
     return render(request, "core/home.html")
-
 
 def register_view(request):
     if request.method == "POST":
@@ -40,4 +16,3 @@ def register_view(request):
         form = CampusBridgeRegisterForm()
 
     return render(request, "registration/register.html", {"form": form})
-    
